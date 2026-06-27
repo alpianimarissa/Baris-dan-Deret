@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Sequence Explorer - Infinite Gate</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght=500;700&family=Plus+Jakarta+Sans:wght=400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+            background-image: radial-gradient(#e2e8f0 1.5px, transparent 1.5px);
+            background-size: 24px 24px;
+        }
+        .heading-font {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        /* Style khusus untuk rumus matematika agar elegan dan mirip buku teks */
+        .math-style {
+            font-family: 'Cambria', 'Times New Roman', serif;
+            font-style: italic;
+        }
+        .slide {
+            display: none;
+        }
+        .slide.active {
+            display: flex;
+            animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Floating animations for SVGs */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(2deg); }
+        }
+        .floating-svg {
+            animation: float 4s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between text-slate-800">
+
+    <!-- Top Header -->
+    <header class="w-full bg-white border-b-4 border-cyan-100 px-6 py-4 flex flex-wrap justify-between items-center gap-4 shadow-sm">
+        <div class="flex items-center gap-3">
+            <div class="w-12 h-12 bg-cyan-100 rounded-2xl flex items-center justify-center text-2xl floating-svg">
+                🌀
+            </div>
+            <div>
+                <h1 class="heading-font text-lg md:text-xl text-cyan-600 font-bold tracking-wide">QUANTUM SEQUENCE EXPLORER</h1>
+                <p class="text-xs text-slate-400 font-black tracking-wider">CAMBRIDGE MATHS LOWER SECONDARY & IGCSE</p>
+            </div>
+        </div>
+        
+        <!-- Score & Navigation Status -->
+        <div class="flex items-center gap-4">
+            <div class="bg-amber-100 px-4 py-2 rounded-2xl border-2 border-amber-200 flex items-center gap-2">
+                <span class="text-sm">⚡</span>
+                <span class="font-extrabold text-amber-700 text-xs md:text-sm">COGNITIVE LEVEL: <span id="userScore">100</span></span>
+            </div>
+            <div id="pageIndicator" class="bg-cyan-50 text-cyan-700 px-4 py-2 rounded-2xl border-2 border-cyan-100 text-xs font-black tracking-wider">
+                MISSION: 1 / 35
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-4xl w-full mx-auto p-4 md:p-8 flex-grow flex flex-col justify-center">
+        
+        <!-- Progress Bar -->
+        <div class="w-full bg-slate-200 h-3 rounded-full mb-6 overflow-hidden border border-slate-300 shadow-inner">
+            <div id="progressBar" class="bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-600 h-full transition-all duration-300" style="width: 2.85%"></div>
+        </div>
+
+        <!-- Slides Wrapper -->
+        <div id="slides-container" class="bg-white rounded-3xl p-6 md:p-10 shadow-xl border-4 border-slate-100 min-h-[500px] flex flex-col justify-between">
+            
+            <!-- Slides Content -->
+            <div id="slides-content" class="flex-grow">
+                
+                <!-- Slide 1: Welcome & Title -->
+                <div class="slide active flex-col items-center text-center gap-6" id="slide-1">
+                    <div class="floating-svg flex justify-center items-center">
+                        <svg width="180" height="180" viewBox="0 0 120 120">
+                            <defs>
+                                <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#06b6d4" />
+                                    <stop offset="100%" stop-color="#4f46e5" />
+                                </linearGradient>
+                            </defs>
+                            <circle cx="60" cy="60" r="50" fill="none" stroke="url(#grad1)" stroke-width="4" stroke-dasharray="10, 5"/>
+                            <polygon points="60,25 90,75 30,75" fill="none" stroke="#f97316" stroke-width="3"/>
+                            <circle cx="60" cy="25" r="6" fill="#f97316"/>
+                            <circle cx="90" cy="75" r="6" fill="#f97316"/>
+                            <circle cx="30" cy="75" r="6" fill="#f97316"/>
+                            <text x="60" y="66" fill="url(#grad1)" font-family="Cambria, serif" font-style="italic" font-weight="bold" font-size="22" text-anchor="middle">uₙ</text>
+                        </svg>
+                    </div>
+                    <h2 class="heading-font text-3xl text-slate-900 font-extrabold tracking-tight">Quantum Sequence Explorer:<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-indigo-600">Infinite Gate</span></h2>
+                    <p class="text-sm md:text-base text-slate-500 max-w-lg leading-relaxed">
+                        Selamat datang, Agen Muda! Siap memecahkan kode rahasia alam semesta dengan menguasai pola <strong>Sequences and Series</strong> (Barisan dan Deret) menggunakan logika Cambridge? Mari kita mulai!
+                    </p>
+                    <div class="bg-cyan-50 border-l-4 border-cyan-400 p-3 rounded-r-xl max-w-md text-left">
+                        <span class="text-xs font-black text-cyan-800 uppercase tracking-wide block">💡 KECERDASAN BUATAN - A.R.E.S:</span>
+                        <span class="text-xs text-slate-600 leading-relaxed">"Aku asisten virtualmu. Kita akan membuka 35 pintu gerbang kuantum bersama-sama!"</span>
+                    </div>
+                </div>
+
+                <!-- Slide 2: Objectives -->
+                <div class="slide flex-col gap-4" id="slide-2">
+                    <h3 class="heading-font text-2xl text-slate-900 font-extrabold">🎯 Your Mission Objectives</h3>
+                    <p class="text-slate-500 text-sm">Di akhir petualangan ini, kamu akan menguasai keahlian setingkat analis data Cambridge:</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                        <div class="p-4 bg-cyan-50 rounded-2xl border border-cyan-100 flex gap-3">
+                            <span class="text-2xl">⚡</span>
+                            <div>
+                                <h4 class="font-bold text-slate-800 text-sm">Arithmetic Sequences</h4>
+                                <p class="text-xs text-slate-500 mt-1">Menemukan beda konstan dan merumuskan suku ke-<span class="math-style font-bold">n</span> secara instan.</p>
+                            </div>
+                        </div>
+                        <div class="p-4 bg-indigo-50 rounded-2xl border border-indigo-100 flex gap-3">
+                            <span class="text-2xl">📐</span>
+                            <div>
+                                <h4 class="font-bold text-slate-800 text-sm">Geometric Sequences</h4>
+                                <p class="text-xs text-slate-500 mt-1">Menguasai rasio perkalian dan memprediksi pertumbuhan eksponensial.</p>
+                            </div>
+                        </div>
+                        <div class="p-4 bg-orange-50 rounded-2xl border border-orange-100 flex gap-3">
+                            <span class="text-2xl">🌀</span>
+                            <div>
+                                <h4 class="font-bold text-slate-800 text-sm">Quadratic Sequences</h4>
+                                <p class="text-xs text-slate-500 mt-1">Menganalisis selisih tingkat dua untuk baris berpangkat.</p>
+                            </div>
+                        </div>
+                        <div class="p-4 bg-emerald-50 rounded-2xl border border-emerald-100 flex gap-3">
+                            <span class="text-2xl">🏆</span>
+                            <div>
+                                <h4 class="font-bold text-slate-800 text-sm">Series & Summation</h4>
+                                <p class="text-xs text-slate-500 mt-1">Menghitung jumlah total suku tanpa perlu menjumlahkannya satu persatu!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 3: Warm-up Part 1 -->
+                <div class="slide flex-col gap-4" id="slide-3">
+                    <h3 class="heading-font text-2xl text-slate-900 font-extrabold">🔥 Warm-up: Pola Visual Dimensi Tinggi</h3>
+                    <p class="text-slate-500 text-sm">Otak cemerlangmu butuh pemanasan cepat! Berapa banyak kubus kecil pada bentuk berikutnya?</p>
+                    <div class="flex justify-center my-4">
+                        <svg width="340" height="100" viewBox="0 0 340 100">
+                            <!-- Pattern 1: 1 block -->
+                            <rect x="20" y="60" width="20" height="20" fill="#2563eb" rx="2"/>
+                            <text x="30" y="95" fill="#64748b" font-weight="bold" font-size="12" text-anchor="middle">Pola 1</text>
+                            
+                            <!-- Pattern 2: 3 blocks -->
+                            <rect x="90" y="60" width="20" height="20" fill="#2563eb" rx="2"/>
+                            <rect x="112" y="60" width="20" height="20" fill="#2563eb" rx="2"/>
+                            <rect x="101" y="38" width="20" height="20" fill="#2563eb" rx="2"/>
+                            <text x="110" y="95" fill="#64748b" font-weight="bold" font-size="12" text-anchor="middle">Pola 2</text>
+
+                            <!-- Pattern 3: 5 blocks -->
+                            <rect x="170" y="60" width="20" height="20" fill="#2563eb" rx="2"/>
+                            <rect x="192" y="60" width="20" height="20" fill="#2563eb" rx="2"/>
+                            <rect x="214" y="60" width="20" height="20" fill="#2563eb" rx="2"/>
+                            <rect x="181" y="38" width="20" height="20" fill="#2563eb" rx="2"/>
+                            <rect x="203" y="38" width="20" height="20" fill="#2563eb" rx="2"/>
+                            <text x="202" y="95" fill="#64748b" font-weight="bold" font-size="12" text-anchor="middle">Pola 3</text>
+
+                            <!-- Pattern 4: Secret placeholder -->
+                            <rect x="270" y="40" width="40" height="40" fill="none" stroke="#cbd5e1" stroke-dasharray="4,4" rx="4"/>
+                            <text x="290" y="65" fill="#94a3b8" font-weight="bold" font-size="20" text-anchor="middle">?</text>
+                            <text x="290" y="95" fill="#64748b" font-weight="bold" font-size="12" text-anchor="middle">Pola 4</text>
+                        </svg>
+                    </div>
+                    <div class="flex gap-3 justify-center">
+                        <button onclick="checkWarmupAnswer(this, 6)" class="px-5 py-3 rounded-xl border-2 border-slate-200 font-bold hover:border-cyan-400 hover:bg-cyan-50 transition-all text-xs">6 Kubus</button>
+                        <button onclick="checkWarmupAnswer(this, 7)" class="px-5 py-3 rounded-xl border-2 border-slate-200 font-bold hover:border-cyan-400 hover:bg-cyan-50 transition-all text-xs">7 Kubus</button>
+                        <button onclick="checkWarmupAnswer(this, 8)" class="px-5 py-3 rounded-xl border-2 border-slate-200 font-bold hover:border-cyan-400 hover:bg-cyan-50 transition-all text-xs">8 Kubus</button>
+                    </div>
+                    <div id="warmupFeedback" class="text-center font-bold text-sm mt-2"></div>
+                </div>
+
+                <!-- Slide 4: Warm-up Part 2 -->
+                <div class="slide flex-col gap-4" id="slide-4">
+                    <h3 class="heading-font text-2xl text-slate-900 font-extrabold">🧩 Warm-up 2: Teka-teki Bilangan Ganjil</h3>
+                    <p class="text-slate-500 text-sm">A.R.E.S mengunci konsol koordinat. Temukan pola bilangan misterius ini untuk membukanya:</p>
+                    <div class="bg-slate-900 text-cyan-400 text-center py-6 rounded-2xl font-mono text-3xl tracking-widest font-extrabold my-4">
+                        2, 5, 8, 11, [?]
+                    </div>
+                    <div class="flex flex-col gap-3 max-w-xs mx-auto">
+                        <input type="number" id="wu2Input" class="px-4 py-3 rounded-xl border-2 border-slate-200 text-center font-extrabold text-lg focus:border-cyan-500 outline-none" placeholder="Isi angka berikutnya">
+                        <button onclick="validateWu2()" class="bg-cyan-500 text-white font-bold py-3 rounded-xl hover:bg-cyan-600 transition-all text-sm">Uji Enkripsi</button>
+                    </div>
+                    <div id="wu2Feedback" class="text-center font-extrabold text-sm mt-1"></div>
+                </div>
+
+                <!-- Slide 5: Real-World Connection -->
+                <div class="slide flex-col gap-4" id="slide-5">
+                    <h3 class="heading-font text-2xl text-slate-900 font-extrabold">🚀 Real-World Connection: Generasi Dunia Fiksi Ilmiah</h3>
+                    <p class="text-slate-500 text-sm">Pernahkah kamu bermain game seperti Minecraft atau No Man's Sky?</p>
+                    <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col md:flex-row items-center gap-6 my-2">
+                        <div class="w-24 h-24 shrink-0 bg-indigo-100 rounded-full flex items-center justify-center text-4xl floating-svg">🎮</div>
+                        <div>
+                            <p class="text-sm text-slate-600 leading-relaxed">
+                                Game tersebut menggunakan teknologi <strong>Procedural Generation</strong> yang dibangun menggunakan algoritma matematika bertingkat (<strong>Sequences</strong>). Komputer membaca koordinat posisimu (<span class="math-style font-bold text-indigo-600">n</span>) lalu menghitung tinggi bukit, posisi pohon, hingga tingkat kesulitan monster secara instan menggunakan rumus aljabar!
+                            </p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-400 italic text-center">"Dengan menguasai Barisan dan Deret, kamu sedang mempelajari bagaimana cara kerja dasar arsitektur game masa depan!"</p>
+                </div>
+
+                <!-- Slide 6: Concept 1: What is Sequence -->
+                <div class="slide flex-col gap-4" id="slide-6">
+                    <h3 class="heading-font text-2xl text-slate-900 font-extrabold">📚 Concept 1: Anatomi Barisan (Sequence)</h3>
+                    <p class="text-slate-500 text-sm">Dalam standar Cambridge, kita mendefinisikan baris bilangan sebagai daftar terurut berdasarkan aturan posisi:</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-2">
+                        <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 text-center">
+                            <span class="text-xs font-black text-slate-400 block mb-2 uppercase">Term (Suku)</span>
+                            <span class="text-2xl font-bold text-cyan-600 math-style">u<sub>n</sub></span>
+                            <p class="text-xs text-slate-500 mt-2">Setiap elemen angka individu di dalam sebuah barisan.</p>
+                        </div>
+                        <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 text-center">
+                            <span class="text-xs font-black text-slate-400 block mb-2 uppercase">Position (Posisi)</span>
+                            <span class="text-2xl font-bold text-indigo-600 math-style">n</span>
+                            <p class="text-xs text-slate-500 mt-2">Urutan suku tersebut. Selalu bernilai bulat positif (<span class="math-style">1, 2, 3, ...</span>).</p>
+                        </div>
+                        <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 text-center">
+                            <span class="text-xs font-black text-slate-400 block mb-2 uppercase">First Term (Suku Pertama)</span>
+                            <span class="text-2xl font-bold text-orange-600 math-style">a</span>
+                            <p class="text-xs text-slate-500 mt-2">Suku awal di mana petualangan barisan bilangan dimulai.</p>
+                        </div>
+                    </div>
+                    <p class="text-sm text-slate-600">Contohnya pada baris: <strong class="text-slate-800">5, 9, 13, 17...</strong> maka <span class="math-style font-bold">u<sub>1</sub> = 5</span> (Suku ke-1) dan <span class="math-style font-bold">u<sub>3</sub> = 13</span> (Suku ke-3).</p>
+                </div>
+
+                <!-- Slide 7: Concept 2: Term-to-term vs Position-to-term -->
+                <div class="slide flex-col gap-4" id="slide-7">
+                    <h3 class="heading-font text-2xl text-slate-900 font-extrabold">⚙️ Concept 2: Aturan Hubungan Bilangan</h3>
+                    <p class="text-slate-500 text-sm">Ada dua cara untuk mendefinisikan aturan barisan dalam Cambridge Syllabus:</p>
+                    <div class="space-y-3 my-2">
+                        <div class="p-4 bg-emerald-50 rounded-2xl border border-emerald-100">
+                            <h4 class="font-bold text-emerald-800 text-sm flex items-center gap-2">🔄 Term-to-term rule (Aturan antar-suku)</h4>
+                            <p class="text-xs text-slate-600 mt-1">Menggambarkan cara mendapatkan suku berikutnya dari suku sebelumnya. Contoh: <strong>"Add 4"</strong> (Tambah 4).</p>
+                        </div>
+                        <div class="p-4 bg-blue-50 rounded-2xl border border-blue-100">
+                            <h4 class="font-bold text-blue-800 text-sm flex items-center gap-2">🎯 Position-to-term rule (Aturan posisi-ke-suku)</h4>
+                            <p class="text-xs text-slate-600 mt-1">Menggunakan formula aljabar langsung menghubungkan posisi <span class="math-style font-semibold">n</span> dengan nilainya. Sangat berguna untuk mencari suku yang jauh! Contoh: <span class="math-style font-semibold">u<sub>n</sub> = 4n + 1</span>.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 8: Concept 3: Arithmetic Sequences -->
+                <div class="slide flex-col gap-4" id="slide-8">
+                    <h3 class="heading-font text-2xl text-slate-900 font-extrabold">📈 Concept 3: Arithmetic (Linear) Sequences</h3>
+                    <p class="text-slate-500 text-sm">Suku berikutnya didapatkan dengan <strong>menambah</strong> atau <strong>mengurangi</strong> angka konstan yang sama.</p>
+                    <div class="bg-slate-100 border-l-8 border-cyan-500 p-4 rounded-xl my-4 text-center">
+                        <span class="text-xs font-black text-slate-400 block uppercase">Formula Suku ke-<span class="math-style">n</span> (<span class="math-style">n</span>-th Term):</span>
+                        <div class="text-3xl font-extrabold text-slate-800 my-1 math-style">
+                            u<sub>n</sub> = a + (n - 1)d
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 text-xs">
+                        <div class="bg-slate-50 p-3 rounded-lg"><strong class="math-style text-cyan-600">a</strong> = First term (suku pertama)</div>
+                        <div class="bg-slate-50 p-3 rounded-lg"><strong class="math-style text-indigo-600">d</strong> = Common difference (beda konstan antar-suku)</div>
+                    </div>
+                </div>
+
+                <!-- Slide 9: Worked Example 1 -->
+                <div class="slide flex-col gap-4" id="slide-9">
+                    <h3 class="heading-font text-2xl text-slate-900 font-extrabold">🔍 Worked Example 1: Menentukan Beda (<span class="math-style">d</span>)</h3>
+                    <p class="text-slate-500 text-sm">Bagaimana cara menentukan <span class="math-style font-bold">d</span> dari barisan yang menurun?</p>
+                    <div class="bg-slate-900 p-6 rounded-2xl text-white font-mono my-2 text-center text-2xl">
+                        18, 15, 12, 9...
+                    </div>
+                    <div class="bg-orange-50 border-l-4 border-orange-400 p-4 rounded-r-xl text-xs text-slate-700 space-y-2">
+                        <p><strong>Langkah Analisis:</strong> Kurangi suku kedua dengan suku pertama.</p>
+                        <p class="text-base text-slate-800 math-style font-bold">
+                            d = u<sub>2</sub> - u<sub>1</sub> = 15 - 18 = -3
+                        </p>
+                        <p>Karena <span class="math-style font-bold">d</span> bernilai negatif (<span class="math-style font-bold">-3</span>), maka nilai barisannya akan terus menyusut!</p>
+                    </div>
+                </div>
+
+                <!-- Slide 10: Worked Example 2 -->
+                <div class="slide flex-col gap-4" id="slide-10">
+                    <h3 class="heading-font text-2xl text-slate-900 font-extrabold">🔍 Worked Example 2: Membuat Formula Aljabar</h3>
+                    <p class="text-slate-500 text-sm">Tentukan rumus suku ke-<span class="math-style">n</span> untuk barisan: <span class="font-bold text-slate-800">7, 11, 15, 19...</span></p>
+                    <div class="space-y-2 text-sm text-slate-600">
+                        <p>1. Suku pertama (<span class="math-style font-bold">a</span>) = 7</p>
+                        <p>2. Beda konstan (<span class="math-style font-bold">d</span>) = 11 - 7 = 4</p>
+                        <p>3. Masukkan ke dalam rumus:</p>
+                        <div class="bg-slate-50 p-3 rounded-xl text-center border border-slate-200 text-lg font-bold text-indigo-600 math-style">
+                            u<sub>n</sub> = 7 + (n - 1) &times; 4 = 4n + 3
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 11: Interactive Practice 1 -->
+                <div class="slide flex-col gap-4" id="slide-11">
+                    <h3 class="heading-font text-2xl text-slate-900 font-extrabold">⚡ Practice 1: Sandi Aljabar</h3>
+                    <p class="text-slate-500 text-sm">Tentukan formula suku ke-<span class="math-style font-semibold">n</span> (<span class="math-style font-semibold">u<sub>n</sub></span>) untuk barisan berikut:</p>
+                    <div class="bg-slate-900 text-emerald-400 text-center py-5 rounded-2xl font-mono text-3xl font-extrabold my-2">
+                        5, 11, 17, 23...
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <button onclick="checkP1(this, 'wrong')" class="p-4 rounded-xl border-2 border-slate-200 font-bold hover:border-cyan-400 text-base hover:bg-cyan-50 transition-all math-style">u<sub>n</sub> = 5n + 1</button>
+                        <button onclick="checkP1(this, 'correct')" class="p-4 rounded-xl border-2 border-slate-200 font-bold hover:border-cyan-400 text-base hover:bg-cyan-50 transition-all math-style">u<sub>n</sub> = 6n - 1</button>
+                        <button onclick="checkP1(this, 'wrong')" class="p-4 rounded-xl border-2 border-slate-200 font-bold hover:border-cyan-400 text-base hover:bg-cyan-50 transition-all math-style">u<sub>n</sub> = 6n + 5</button>
+                    </div>
+                    <div id="p1Feedback" class="text-center font-extrabold text-sm mt-2"></div>
+                </div>
+
+                <!-- Slide 12: Practice 2 -->
+                <div class="slide flex-col gap-4" id="slide-12">
+                    <h3 class="heading-font text-2xl text-slate-900 font-extrabold">🧩 Practice 2: Teleportasi Suku Jauh</h3>
+                    <p class="text-slate-500 text-sm">Menggunakan rumus <span class="math-style font-bold">u<sub>n</sub> = 3n + 7</span>, suku ke-50 (<span class="math-style font-bold">u<sub>50</sub></span>) berada di koordinat berapa?</p>
+                    <div class="flex flex-col gap-3 max-w-xs mx-auto my-4">
+                        <input type="number" id="p2Input" class="px-4 py-3 rounded-xl border-2 border-slate-200 text-center font-extrabold text-lg focus:border-cyan-500 outline-none" placeholder="Masukkan nilai u_50">
+                        <button onclick="validateP2()" class="bg-cyan-500 text-white font-bold py-3 rounded-xl hover:bg-cyan-600 transition-all text-sm">Kirim Koordinat</button>
+                    </div>
+                    <div id="p2Feedback" class="text-center font-extrabold text-sm mt-1"></div>
+                </div>
+
+                <!-- Slide 13: Concept 4: Geometric Sequences -->
+                <div class="slide flex-col gap-4" id="slide-13">
+                    <h3 class="heading-font text-2xl text-slate-900 font-extrabold">📐 Concept 4: Geometric Sequences</h3>
+                    <p class="text-slate-500 text-sm">Suku berikutnya didapatkan dengan <strong>mengalikan</strong> angka konstan yang sama secara berulang.</p>
+                    <div class="bg-slate-100 border-l-8 border-indigo-500 p-4 rounded-xl my-4 text-center">
+                        <span class="text-xs font-black text-slate-400 block uppercase">Formula Suku ke-<span class="math-style">n</span> (<span class="math-style">n</span>-th Term):</span>
+                        <div class="text-3xl font-extrabold text-slate-800 my-1 math-style">
+                            u<sub>n</sub> = a &middot; r<sup>n - 1</sup>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 text-xs">
+                        <div class="bg-slate-50 p-3 rounded-lg"><strong class="math-style text-cyan-600">a</strong> = First term (suku pertama)</div>
+                        <div class="bg-slate-50 p-3 rounded-lg"><strong class="math-style text-indigo-600">r</strong> = Common ratio (rasio pengali konstan)</div>
+                    </div>
+                </div>
+
+                <!-- Slide 14: Worked Example 3 -->
+                <div class="slide flex-col gap-4" id="slide-14">
+                    <h3 class="heading-font text-2xl text-slate-900 font-extrabold">🔍 Worked Example 3: Mencari Rasio (<span class="math-style">r</span>)</h3>
+                    <p class="text-slate-500 text-sm">Berapakah rasio dari barisan geometrik yang menyusut?</p>
+                    <div class="bg-slate-900 p-6 rounded-2xl text-white font-mono my-2 text-center text-2xl">
+                        32, 16, 8, 4...
+                    </div>
+                    <div class="bg-orange-50 border-l-4 border-orange-400 p-4 rounded-r-xl text-xs text-slate-700 space-y-2">
+                        <p><strong>Langkah Analisis:</strong> Bagi suku kedua dengan suku pertama.</p>
+                        <p class="text-base text-slate-800 font-bold math-style">
+                            r = 16 &divide; 32 = 0.5 <span class="text-xs font-normal text-slate-500">(atau &frac12;)</span>
+                        </p>
+                        <p>Rasio pecahan (<span class="math-style font-semibold">r &lt; 1</span>) menyebabkan nilai barisan mengecil seiring bertambahnya posisi!</p>
+                    </div>
+                </div>
+
+                <!-- Slide 15: Worked Example 4 -->
+                <div class="slide flex-col gap-4" id="slide-15">
+                    <h3 class="heading-font text-2xl text-slate-900 font-extrabold">🔍 Worked Example 4: Kerusakan Senjata RPG</h3>
+                    <p class="text-slate-500 text-sm">Dalam sebuah game RPG, damage pedangmu meningkat 3 kali lipat setiap kali di-upgrade.</p>
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 text-sm space-y-2">
+                        <p>Jika damage awal pedangmu level 1 (<span class="math-style font-bold">a</span>) adalah 10 poin.</p>
+                        <p>Level 1: 10 | Level 2: 30 | Level 3: 90</p>
+                        <p><strong>Rumus kerusakan pada upgrade level <span class="math-style font-bold">n</span>:</strong></p>
+                        <div class="bg-white p-3 rounded-lg border border-slate-200 text-center text-lg font-bold text-indigo-600 math-style">
+                            u<sub>n</sub> = 10 &middot; 3<sup>n - 1</sup>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 16: Interactive Practice 3 -->
+                <div class="slide flex-col gap-4" id="slide-16">
+                    <h3 class="heading-font text-2xl text-slate-900 font-extrabold">⚡ Practice 3: Cyber Virus Infection</h3>
+                    <p class="text-slate-500 text-sm">Virus komputer menyebar secara geometrik: <span class="font-bold text-slate-800">3, 6, 12, 24...</span> Berapakah jumlah file yang terinfeksi pada suku ke-6 (<span class="math-style font-bold">u<sub>6</sub></span>)?</p>
+                    <div class="flex flex-col gap-3 max-w-xs mx-auto my-4">
+                        <input type="number" id="p3Input" class="px-4 py-3 rounded-xl border-2 border-slate-200 text-center font-extrabold text-lg focus:border-cyan-500 outline-none" placeholder="Masukkan u_6">
+                        <button onclick="validateP3()" class="bg-cyan-500 text-white font-bold py-3 rounded-xl hover:bg-cyan-600 transition-all text-sm">Karantina Virus</button>
+                    </div>
+                    <div id="p3Feedback" class="text-center font-extrabold text-sm mt-1"></div>
+                </div>
+
+                <!-- Slide 17: Practice 4 -->
+                <div class="slide flex-col gap-4" id="slide-17">
+                    <h3 class="heading-font text-2xl text-slate-900 font-extrabold">🧩 Practice 4: Teka-teki Pola Pecahan</h3>
+                    <p class="text-slate-500 text-sm">Tebak angka berikutnya pada barisan pecahan geometrik ini:</p>
+                    <div class="bg-slate-900 text-amber-400 text-center py-5 rounded-2xl font-mono text-3xl font-extrabold my-2">
+                        81, 27, 9, 3, [?]
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <button onclick="checkP4(this, 'correct')" class="p-4 rounded-xl border-2 border-slate-200 font-bold hover:border-cyan-400 text-sm hover:bg-cyan-50 transition-all">1</button>
+                        <button onclick="checkP4(this, 'wrong')" class="p-4 rounded-xl border-2 border-slate-200 font-bold hover:border-cyan-400 text-sm hover:bg-cyan-50 transition-all">0</button>
+                        <button onclick="checkP4(this, 'wrong')" class="p-4 rounded-xl border-2 border-slate-200 font-bold hover:border-cyan-400 text-sm hover:bg-cyan-50 transition-all">0.33</button>
+                    </div>
+                    <div id="p4Feedback" class="text-center font-extrabold text-sm mt-2"></div>
+                </div>
+
+                <!-- Slide 18: Fast Learner Corner 1 -->
+                <div class="slide flex-col gap-4" id="slide-18">
+                    <h3 class="heading-font text-2xl text-slate-900 font-extrabold">⚡ Fast Learner Corner 1: Quadratic Sequences</h3>
+                    <p class="text-slate-500 text-sm">Misi tingkat lanjut! Barisan kuadrat memiliki <strong>selisih tingkat dua</strong> yang konstan.</p>
+                    <div class="bg-slate-100 border-l-8 border-orange-500 p-4 rounded-xl my-4 text-center">
+                        <span class="text-xs font-black text-slate-400 block uppercase">Formula Suku ke-<span class="math-style">n</span> (<span class="math-style">n</span>-th Term):</span>
+                        <div class="text-3xl font-extrabold text-slate-800 my-1 math-style">
+                            u<sub>n</sub> = an<sup>2</sup> + bn + c
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-500 text-center">Cambridge sering menguji kemampuanmu membongkar barisan ini menggunakan perbedaan baris!</p>
+                </div>
+
+                <!-- Slide 19: Worked Example 5 -->
+                <div class="slide flex-col gap-4" id="slide-19">
+                    <h3 class="heading-font text-2xl text-slate-900 font-extrabold">🔍 Worked Example 5: First & Second Difference</h3>
+                    <p class="text-slate-500 text-sm">Mari kita bedah barisan kuadrat ini: <span class="font-bold">2, 6, 12, 20...</span></p>
+                    <div class="bg-slate-900 p-4 rounded-2xl text-white font-mono text-sm space-y-1">
+                        <p>Suku: 2, &nbsp; 6, &nbsp; 12, &nbsp; 20</p>
+                        <p class="text-cyan-400">Selisih Tingkat 1: &nbsp; +4, &nbsp; +6, &nbsp; +8</p>
+                        <p class="text-orange-400">Selisih Tingkat 2 (Konstan): &nbsp; +2, &nbsp; +2</p>
+                    </div>
+                    <div class="bg-orange-50 p-3 rounded-xl text-xs text-slate-700">
+                        <p><strong>Rumus Kunci:</strong> Selisih tingkat dua selalu bernilai <span class="math-style font-bold">2a</span>.</p>
+                        <p>Jika <span class="math-style font-bold">2a = 2</span>, maka <span class="math-style font-bold">a = 1</span>. Rumusnya akan bernilai <span class="math-style font-bold">1n<sup>2</sup></span> ditambah sisa barisan linear!</p>
+                    </div>
+                </div>
+
+                <!-- Slide 20: Interactive Practice 5 -->
+                <div class="slide flex-col gap-4" id="slide-20">
+                    <h3 class="heading-font text-2xl text-slate-900 font-extrabold">⚡ Practice 5: Quadratic Decoder</h3>
+                    <p class="text-slate-500 text-sm">Selesaikan rumus suku ke-<span class="math-style">n</span> untuk barisan kuadrat paling murni: <span class="font-bold text-slate-800">1, 4, 9, 16...</span> Berapakah nilai suku ke-10 (<span class="math-style font-bold">u<sub>10</sub></span>)?</p>
+                    <div class="flex flex-col gap-3 max-w-xs mx-auto my-4">
+                        <input type="number" id="p5Input" class="px-4 py-3 rounded-xl border-2 border-slate-200 text-center font-extrabold text-lg focus:border-cyan-500 outline-none" placeholder="Masukkan u_10">
+                        <button onclick="validateP5()" class="bg-cyan-500 text-white font-bold py-3 rounded-xl hover:bg-cyan-600 transition-all text-sm">Buka Kunci Sandi</button>
+                    </div>
+                    <div id="p5Feedback" class="text-center font-extrabold text-sm mt-1"></div>
+                </div>
+
+                <!-- Slide 21: Concept 5: Fibonacci Sequences -->
+                <div class="slide flex-col gap-4" id="slide-21">
+                    <h3 class="heading-font text-2xl text-slate-900 font-extrabold">🌀 Concept 5: Fibonacci Sequences</h3>
+                    <p class="text-slate-500 text-sm">Suku berikutnya adalah hasil <strong>penjumlahan dua suku sebelumnya</strong>.</p>
+                    <div class="bg-slate-100 border-l-8 border-emerald-500 p-4 rounded-xl my-4 text-center">
+                        <span class="text-xs font-black text-slate-400 block uppercase">Aturan Pembentukan:</span>
+                        <div class="text-3xl font-extrabold text-slate-800 my-1 math-style">
+                            x<sub>n</sub> = x<sub>n-1</sub> + x<sub>n-2</sub>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-500 text-center">Sandi Fibonacci seringkali muncul di bentuk spiral kelopak bunga, galaksi, dan cangkang kerang!</p>
+                </div>
+
+                <!-- Slide 22: Worked Example 6 -->
+                <div class="slide flex-col gap-4" id="slide-22">
+                    <h3 class="heading-font text-2xl text-slate-900 font-extrabold">🔍 Worked Example 6: Nature's Secret Code</h3>
+                    <p class="text-slate-500 text-sm">Mari kita bangun deretan bilangan Fibonacci dari awal:</p>
+                    <div class="bg-slate-900 p-6 rounded-2xl text-white font-mono my-2 text-center text-xl tracking-wider">
+                        1, 1, 2, 3, 5, 8, 13...
+                    </div>
+                    <div class="bg-orange-50 border-l-4 border-orange-400 p-4 rounded-r-xl text-xs text-slate-700">
+                        <p>Suku ke-3 didapat dari: 1 + 1 = 2</p>
+                        <p>Suku ke-4 didapat dari: 1 + 2 = 3</p>
+                        <p>Suku ke-5 didapat dari: 2 + 3 = 5, dan seterusnya secara berantai!</p>
+                    </div>
+                </div>
+
+                <!-- Slide 23: Interactive Practice 6 -->
+                <div class="slide flex-col gap-4" id="slide-23">
+                    <h3 class="heading-font text-2xl text-slate-900 font-extrabold">⚡ Practice 6: Fibonacci Portal Key</h3>
+                    <p class="text-slate-500 text-sm">Temukan angka rahasia berikutnya untuk membuka pintu dimensi:</p>
+                    <div class="bg-slate-900 text-orange-400 text-center py-5 rounded-2xl font-mono text-3xl font-extrabold my-2">
+                        2, 3, 5, 8, 13, 21, [?]
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <button onclick="checkP6(this, 'wrong')" class="p-4 rounded-xl border-2 border-slate-200 font-bold hover:border-cyan-400 text-sm hover:bg-cyan-50 transition-all">33</button>
+                        <button onclick="checkP6(this, 'correct')" class="p-4 rounded-xl border-2 border-slate-200 font-bold hover:border-cyan-400 text-sm hover:bg-cyan-50 transition-all">34</button>
+                        <button onclick="checkP6(this, 'wrong')" class="p-4 rounded-xl border-2 border-slate-200 font-bold hover:border-cyan-400 text-sm hover:bg-cyan-50 transition-all">35</button>
+                    </div>
+                    <div id="p6Feedback" class="text-center font-extrabold text-sm mt-2"></div>
+                </div>
+
+                <!-- Slide 24: Concept 6: Introduction to Series -->
+                <div class="slide flex-col gap-4" id="slide-24">
+                    <h3 class="heading-font text-2xl text-slate-900 font-extrabold">📚 Concept 6: Apa itu Deret (Series)?</h3>
+                    <p class="text-slate-500 text-sm">Jika <strong>Barisan (Sequence)</strong> adalah daftar angkanya, maka <strong>Deret (Series)</strong> adalah <strong>jumlah total</strong> dari suku-suku tersebut.</p>
+                    <div class="bg-slate-50 p-5 rounded-2xl border-2 border-dashed border-slate-200 my-4 flex flex-col md:flex-row justify-around items-center gap-4">
+                        <div class="text-center">
+                            <span class="text-xs font-black text-slate-400 block mb-1 uppercase">Sequence:</span>
+                            <span class="text-xl font-bold text-slate-700">2, 4, 6, 8</span>
+                        </div>
+                        <div class="text-2xl text-slate-300">➔</div>
+                        <div class="text-center">
+                            <span class="text-xs font-black text-slate-400 block mb-1 uppercase">Series:</span>
+                            <span class="text-xl font-bold text-cyan-600">2 + 4 + 6 + 8 = 20</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-400 text-center">Kita melambangkan jumlah suku dengan simbol huruf besar <span class="math-style text-cyan-600 font-bold">S<sub>n</sub></span>.</p>
+                </div>
+
+                <!-- Slide 25: Worked Example 7 -->
+                <div class="slide flex-col gap-4" id="slide-25">
+                    <h3 class="heading-font text-2xl text-slate-900 font-extrabold">🔍 Worked Example 7: Trik Cerdas Gauss</h3>
+                    <p class="text-slate-500 text-sm">Bagaimana cara menghitung jumlah angka 1 sampai 100 secara cepat tanpa komputer?</p>
+                    <div class="p-4 bg-orange-50 border-l-4 border-orange-400 rounded-r-xl text-xs text-slate-700 space-y-2">
+                        <p><strong>Trik Gauss:</strong> Pasangkan angka dari luar ke dalam.</p>
+                        <p>1 + 100 = 101 | 2 + 99 = 101 | 3 + 98 = 101 ...</p>
+                        <p>Ada tepat 50 pasang angka bernilai 101!</p>
+                        <p class="text-sm font-bold text-slate-800 math-style">
+                            Total = 50 &times; 101 = 5050
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Slide 26: Concept 7: Sum of Arithmetic Series -->
+                <div class="slide flex-col gap-4" id="slide-26">
+                    <h3 class="heading-font text-2xl text-slate-900 font-extrabold">📐 Concept 7: Sum of Arithmetic Series</h3>
+                    <p class="text-slate-500 text-sm">Gunakan formula universal ini untuk menjumlahkan barisan aritmetika berapapun besarnya:</p>
+                    <div class="bg-slate-100 border-l-8 border-indigo-500 p-4 rounded-xl my-4 text-center">
+                        <span class="text-xs font-black text-slate-400 block uppercase">Formula Jumlah Suku (<span class="math-style font-bold">S<sub>n</sub></span>):</span>
+                        <div class="text-2xl md:text-3xl font-extrabold text-slate-800 my-2 flex justify-center items-center gap-1 math-style">
+                            S<sub>n</sub> = <span class="inline-flex flex-col text-center align-middle text-2xl leading-none"><span class="border-b border-slate-700 pb-0.5">n</span><span class="pt-0.5">2</span></span> [2a + (n - 1)d]
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-500 text-center">Membagi jumlah suku menjadi dua bagian pasang lalu mengalikannya dengan nilai total ujung!</p>
+                </div>
+
+                <!-- Slide 27: Interactive Practice 7 -->
+                <div class="slide flex-col gap-4" id="slide-27">
+                    <h3 class="heading-font text-2xl text-slate-900 font-extrabold">⚡ Practice 7: Power Grid Load Balancer</h3>
+                    <p class="text-slate-500 text-sm">Sebuah reaktor membutuhkan energi bertahap: <span class="font-bold">2 + 4 + 6 + 8...</span> Berapakah total energi jika dijumlahkan hingga suku ke-10 (<span class="math-style font-bold">S<sub>10</sub></span>)?</p>
+                    <div class="flex flex-col gap-3 max-w-xs mx-auto my-4">
+                        <input type="number" id="p7Input" class="px-4 py-3 rounded-xl border-2 border-slate-200 text-center font-extrabold text-lg focus:border-cyan-500 outline-none" placeholder="Masukkan S_10">
+                        <button onclick="validateP7()" class="bg-cyan-500 text-white font-bold py-3 rounded-xl hover:bg-cyan-600 transition-all text-sm">Seimbangkan Reaktor</button>
+                    </div>
+                    <div id="p7Feedback" class="text-center font-extrabold text-sm mt-1"></div>
+                </div>
+
+                <!-- Slide 28: Fast Learner Corner 2 -->
+                <div class="slide flex-col gap-4" id="slide-28">
+                    <h3 class="heading-font text-2xl text-slate-900 font-extrabold">⚡ Fast Learner Corner 2: Deret Geometri Tak Hingga</h3>
+                    <p class="text-slate-500 text-sm">Pernahkah kamu mendengar paradoks Achilles mengejar Kura-kura?</p>
+                    <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200 text-sm my-2 space-y-2">
+                        <p class="leading-relaxed">
+                            Jika kamu melompat setengah jarak dari dinding terus menerus (<span class="math-style font-semibold">&frac12; + &frac14; + &frac18; + &frac116; ...</span>), apakah kamu akan menyentuh dinding tersebut secara matematis di ujung waktu?
+                        </p>
+                        <p class="font-bold text-indigo-600 text-center text-base">
+                            Jawabannya adalah ya! Nilai deret tersebut mendekati angka bulat konstan: 1!
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Slide 29: Final Boss Intro -->
+                <div class="slide flex-col items-center text-center gap-6" id="slide-29">
+                    <div class="floating-svg">
+                        <svg width="120" height="120" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="40" fill="none" stroke="#f97316" stroke-width="4" stroke-dasharray="8,4"/>
+                            <polygon points="50,15 80,45 80,75 50,85 20,75 20,45" fill="none" stroke="#ef4444" stroke-width="3"/>
+                            <text x="50" y="58" fill="#ef4444" font-family="Space Grotesk" font-weight="extrabold" font-size="24" text-anchor="middle">BOSS</text>
+                        </svg>
+                    </div>
+                    <h3 class="heading-font text-2xl text-slate-900 font-extrabold">⚔️ GERBANG QUANTUM TERKUNCI!</h3>
+                    <p class="text-slate-500 text-sm max-w-md">
+                        Sistem AI musuh mendeteksi kehadiranmu. Tiga segel pengaman kuantum harus dipecahkan berturut-turut untuk meloloskan pesawatmu!
+                    </p>
+                </div>
+
+                <!-- Slide 30: Mega Boss Quiz 1 -->
+                <div class="slide flex-col gap-4" id="slide-30">
+                    <h3 class="heading-font text-2xl text-slate-900 font-extrabold">🔥 Segel Kuantum 1: Koordinat Warp</h3>
+                    <p class="text-slate-500 text-sm">Selesaikan suku ke-12 (<span class="math-style font-bold">u<sub>12</sub></span>) dari barisan berikut:</p>
+                    <div class="bg-slate-900 text-cyan-400 text-center py-5 rounded-2xl font-mono text-3xl font-extrabold my-2">
+                        3, 7, 11, 15...
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <button onclick="checkBoss1(this, 'correct')" class="p-4 rounded-xl border-2 border-slate-200 font-bold hover:border-cyan-400 text-sm hover:bg-cyan-50 transition-all">47</button>
+                        <button onclick="checkBoss1(this, 'wrong')" class="p-4 rounded-xl border-2 border-slate-200 font-bold hover:border-cyan-400 text-sm hover:bg-cyan-50 transition-all">48</button>
+                        <button onclick="checkBoss1(this, 'wrong')" class="p-4 rounded-xl border-2 border-slate-200 font-bold hover:border-cyan-400 text-sm hover:bg-cyan-50 transition-all">51</button>
+                    </div>
+                    <div id="boss1Feedback" class="text-center font-extrabold text-sm mt-2"></div>
+                </div>
+
+                <!-- Slide 31: Mega Boss Quiz 2 -->
+                <div class="slide flex-col gap-4" id="slide-31">
+                    <h3 class="heading-font text-2xl text-slate-900 font-extrabold">🔥 Segel Kuantum 2: Frekuensi Inti</h3>
+                    <p class="text-slate-500 text-sm">Jika barisan geometri memiliki suku pertama <span class="math-style font-bold">a = 5</span> dan rasio <span class="math-style font-bold">r = 2</span>, berapakah nilai suku ke-5 (<span class="math-style font-bold">u<sub>5</sub></span>)?</p>
+                    <div class="flex flex-col gap-3 max-w-xs mx-auto my-4">
+                        <input type="number" id="boss2Input" class="px-4 py-3 rounded-xl border-2 border-slate-200 text-center font-extrabold text-lg focus:border-cyan-500 outline-none" placeholder="Masukkan nilai u_5">
+                        <button onclick="validateBoss2()" class="bg-cyan-500 text-white font-bold py-3 rounded-xl hover:bg-cyan-600 transition-all text-sm">Kirim Frekuensi</button>
+                    </div>
+                    <div id="boss2Feedback" class="text-center font-extrabold text-sm mt-1"></div>
+                </div>
+
+                <!-- Slide 32: Mega Boss Quiz 3 -->
+                <div class="slide flex-col gap-4" id="slide-32">
+                    <h3 class="heading-font text-2xl text-slate-900 font-extrabold">🔥 Segel Kuantum 3: Deret Akhir</h3>
+                    <p class="text-slate-500 text-sm">Gunakan trik cerdas yang sudah dipelajari untuk menghitung jumlah 20 suku pertama dari deret aritmetika berikut:</p>
+                    <div class="bg-slate-900 text-orange-400 text-center py-5 rounded-2xl font-mono text-3xl font-extrabold my-2">
+                        1 + 3 + 5 + 7...
+                    </div>
+                    <div class="flex flex-col gap-3 max-w-xs mx-auto mb-4">
+                        <input type="number" id="boss3Input" class="px-4 py-3 rounded-xl border-2 border-slate-200 text-center font-extrabold text-lg focus:border-cyan-500 outline-none" placeholder="Masukkan nilai S_20">
+                        <button onclick="validateBoss3()" class="bg-cyan-500 text-white font-bold py-3 rounded-xl hover:bg-cyan-600 transition-all text-sm">Hancurkan Segel Akhir</button>
+                    </div>
+                    <div id="boss3Feedback" class="text-center font-extrabold text-sm mt-1"></div>
+                </div>
+
+                <!-- Slide 33: Reflection -->
+                <div class="slide flex-col gap-4" id="slide-33">
+                    <h3 class="heading-font text-2xl text-slate-900 font-extrabold">🧠 Jurnal Refleksi Agen</h3>
+                    <p class="text-slate-500 text-sm">Bagaimana tingkat pemahamanmu terhadap materi Barisan & Deret Cambridge hari ini?</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-4">
+                        <div onclick="selectReflect(this, 'sangat_paham')" class="p-6 bg-slate-50 border-2 border-slate-200 hover:border-cyan-400 hover:bg-cyan-50 rounded-2xl text-center cursor-pointer transition-all">
+                            <span class="text-3xl block mb-2">😎</span>
+                            <span class="font-bold text-sm text-slate-800">Sangat Paham & Menantang</span>
+                        </div>
+                        <div onclick="selectReflect(this, 'paham')" class="p-6 bg-slate-50 border-2 border-slate-200 hover:border-cyan-400 hover:bg-cyan-50 rounded-2xl text-center cursor-pointer transition-all">
+                            <span class="text-3xl block mb-2">🤔</span>
+                            <span class="font-bold text-sm text-slate-800">Cukup Paham & Bisa Mengikuti</span>
+                        </div>
+                        <div onclick="selectReflect(this, 'butuh_latihan')" class="p-6 bg-slate-50 border-2 border-slate-200 hover:border-cyan-400 hover:bg-cyan-50 rounded-2xl text-center cursor-pointer transition-all">
+                            <span class="text-3xl block mb-2">🚀</span>
+                            <span class="font-bold text-sm text-slate-800">Butuh Lebih Banyak Latihan</span>
+                        </div>
+                    </div>
+                    <div id="reflectFeedback" class="text-center font-bold text-cyan-600 text-sm"></div>
+                </div>
+
+                <!-- Slide 34: Summary -->
+                <div class="slide flex-col gap-4" id="slide-34">
+                    <h3 class="heading-font text-2xl text-slate-900 font-extrabold">📚 Rangkuman Ilmu Hari Ini</h3>
+                    <div class="bg-slate-50 p-6 rounded-2xl border-2 border-dashed border-slate-200 text-sm space-y-3">
+                        <p class="leading-relaxed">
+                            1. <strong>Barisan (Sequence)</strong>: Kumpulan bilangan berpola tertentu. Suku pertama dilambangkan dengan <span class="math-style font-semibold">a</span>, suku ke-<span class="math-style font-semibold">n</span> dilambangkan dengan <span class="math-style font-semibold">u<sub>n</sub></span> pada urutan ke-<span class="math-style font-semibold">n</span>.
+                        </p>
+                        <p class="leading-relaxed">
+                            2. <strong>Barisan Aritmetika</strong>: Suku-suku berubah dengan ditambah atau dikurangi beda (<span class="math-style font-semibold">d</span>) yang konstan. Rumus: <span class="math-style font-semibold">u<sub>n</sub> = a + (n-1)d</span>.
+                        </p>
+                        <p class="leading-relaxed">
+                            3. <strong>Barisan Geometri</strong>: Suku-suku berubah dengan dikalikan rasio (<span class="math-style font-semibold">r</span>) yang konstan. Rumus: <span class="math-style font-semibold">u<sub>n</sub> = a &middot; r<sup>n-1</sup></span>.
+                        </p>
+                        <p class="leading-relaxed">
+                            4. <strong>Deret (Series)</strong>: Penjumlahan dari seluruh suku barisan, dilambangkan dengan <span class="math-style font-semibold">S<sub>n</sub></span>.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Slide 35: Certificate & Completion -->
+                <div class="slide flex-col items-center text-center gap-6" id="slide-35">
+                    <div class="border-4 double border-amber-400 p-8 rounded-3xl bg-amber-50/50 shadow-md max-w-xl w-full">
+                        <span class="text-5xl block mb-4">🏆</span>
+                        <h2 class="heading-font text-2xl text-amber-800 font-extrabold tracking-wider">CERTIFICATE OF COMPLETION</h2>
+                        <p class="text-xs text-slate-500 uppercase font-black mt-2 tracking-widest">Diberikan Kepada</p>
+                        <h3 class="text-2xl text-slate-800 font-bold math-style my-2" id="certName">MASTER OF QUANTUM SEQUENCES</h3>
+                        <p class="text-xs text-slate-600 max-w-md mx-auto leading-relaxed">
+                            Atas keberhasilannya menyelesaikan 35 tantangan interaktif barisan dan deret berskala kurikulum Cambridge IGCSE dengan skor kelulusan sempurna.
+                        </p>
+                        <div class="border-t border-amber-200 mt-6 pt-4 text-[10px] text-slate-400 font-mono">
+                            VERIFIED SECURELY BY QUANTUM CORE ENGINE 2026
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Bottom Navigation controls inside the container to maintain height -->
+            <div class="flex justify-between items-center mt-6 pt-6 border-t border-slate-100">
+                <button id="prevBtn" onclick="changeSlide(-1)" class="bg-slate-100 text-slate-600 font-bold py-2.5 px-6 rounded-xl hover:bg-slate-200 active:scale-95 transition-all text-xs" disabled>
+                    Sebelumnya
+                </button>
+                <button id="nextBtn" onclick="changeSlide(1)" class="bg-cyan-500 text-white font-black py-2.5 px-8 rounded-xl hover:bg-cyan-600 active:scale-95 transition-all text-xs">
+                    Berikutnya
+                </button>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Simple Sound Synthesis (No External Dependencies) -->
+    <script>
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playTone(freq, type, duration) {
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {
+                console.log("Audio synthesis not supported or needs user click interaction first.");
+            }
+        }
+        
+        function soundSuccess() {
+            playTone(523.25, 'sine', 0.15); // C5
+            setTimeout(() => playTone(659.25, 'sine', 0.25), 100); // E5
+        }
+
+        function soundFail() {
+            playTone(220, 'triangle', 0.3); // A3
+        }
+
+        function soundLevelUp() {
+            playTone(523.25, 'sine', 0.1);
+            setTimeout(() => playTone(659.25, 'sine', 0.1), 80);
+            setTimeout(() => playTone(783.99, 'sine', 0.1), 160);
+            setTimeout(() => playTone(1046.50, 'sine', 0.4), 240); // Celebration chord
+        }
+    </script>
+
+    <!-- Custom Alert Overlay -->
+    <div id="customAlert" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-3xl p-6 max-w-sm w-full border-4 border-cyan-100 shadow-2xl text-center flex flex-col gap-4 animate-scaleUp">
+            <div id="alertIcon" class="text-4xl">⚠️</div>
+            <h4 id="alertTitle" class="heading-font font-bold text-lg text-slate-800">Sistem Alert</h4>
+            <p id="alertMsg" class="text-xs text-slate-500 leading-relaxed"></p>
+            <button onclick="closeAlert()" class="bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-2.5 rounded-xl text-xs transition-all w-full">Kembali</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 35;
+        let score = 100;
+
+        function updateUI() {
+            // Hide all slides
+            for (let i = 1; i <= totalSlides; i++) {
+                const s = document.getElementById('slide-' + i);
+                if (s) s.classList.remove('active');
+            }
+
+            // Show active slide
+            const activeS = document.getElementById('slide-' + currentSlide);
+            if (activeS) {
+                activeS.classList.add('active');
+            } else {
+                createDynamicSlide(currentSlide);
+            }
+
+            // Update Header Page Indicators
+            document.getElementById('pageIndicator').innerText = `MISSION: ${currentSlide} / ${totalSlides}`;
+            document.getElementById('progressBar').style.width = `${(currentSlide / totalSlides) * 100}%`;
+
+            // Buttons state
+            document.getElementById('prevBtn').disabled = (currentSlide === 1);
+            if (currentSlide === totalSlides) {
+                document.getElementById('nextBtn').innerText = "SELESAI 🎉";
+                document.getElementById('nextBtn').disabled = true;
+            } else {
+                document.getElementById('nextBtn').innerText = "Berikutnya";
+                document.getElementById('nextBtn').disabled = false;
+            }
+        }
+
+        function changeSlide(direction) {
+            currentSlide += direction;
+            if (currentSlide < 1) currentSlide = 1;
+            if (currentSlide > totalSlides) currentSlide = totalSlides;
+            updateUI();
+        }
+
+        // Custom Overlay Alert System (replaces default browser alert)
+        function triggerAlert(title, message, icon = '⚠️') {
+            document.getElementById('alertIcon').innerText = icon;
+            document.getElementById('alertTitle').innerText = title;
+            document.getElementById('alertMsg').innerHTML = message; // Using innerHTML to render custom styled formulas
+            const modal = document.getElementById('customAlert');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeAlert() {
+            const modal = document.getElementById('customAlert');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // --- Question Validators ---
+        function checkWarmupAnswer(btn, answer) {
+            const fb = document.getElementById('warmupFeedback');
+            if (answer === 7) {
+                soundSuccess();
+                fb.innerHTML = "🎯 BENAR! Pola bertambah +2 (1, 3, 5, 7). Kamu sangat jeli!";
+                fb.className = "text-center font-bold text-sm mt-2 text-emerald-500 animate-bounce";
+                score += 5;
+                document.getElementById('userScore').innerText = score;
+            } else {
+                soundFail();
+                fb.innerHTML = "❌ Kurang tepat. Coba perhatikan baik-baik pertambahan kubus di baris bawah!";
+                fb.className = "text-center font-bold text-sm mt-2 text-red-500";
+            }
+        }
+
+        function validateWu2() {
+            const val = parseInt(document.getElementById('wu2Input').value);
+            const fb = document.getElementById('wu2Feedback');
+            if (val === 14) {
+                soundSuccess();
+                fb.innerHTML = "🔐 DEKRIPSI BERHASIL! Pola konstan bertambah +3.";
+                fb.className = "text-center font-extrabold text-sm mt-1 text-emerald-500";
+                score += 10;
+                document.getElementById('userScore').innerText = score;
+            } else {
+                soundFail();
+                fb.innerHTML = "🔒 ENKRIPSI GAGAL. Pola konstan bukan itu!";
+                fb.className = "text-center font-extrabold text-sm mt-1 text-red-500";
+            }
+        }
+
+        function checkP1(btn, status) {
+            const fb = document.getElementById('p1Feedback');
+            if (status === 'correct') {
+                soundSuccess();
+                fb.innerHTML = "🎯 BENAR! Rumusnya adalah u<sub>n</sub> = 6n - 1.";
+                fb.className = "text-center font-extrabold text-sm mt-2 text-emerald-500";
+                score += 15;
+                document.getElementById('userScore').innerText = score;
+            } else {
+                soundFail();
+                fb.innerHTML = "❌ SALAH! Uji posisi n = 1, apakah hasilnya cocok dengan suku pertama?";
+                fb.className = "text-center font-extrabold text-sm mt-2 text-red-500";
+            }
+        }
+
+        function validateP2() {
+            const val = parseInt(document.getElementById('p2Input').value);
+            const fb = document.getElementById('p2Feedback');
+            if (val === 157) {
+                soundSuccess();
+                fb.innerHTML = "🎯 TELEPORTASI BERHASIL! Koordinat u<sub>50</sub> adalah 3 &times; 50 + 7 = 157.";
+                fb.className = "text-center font-extrabold text-sm mt-1 text-emerald-500";
+                score += 15;
+                document.getElementById('userScore').innerText = score;
+            } else {
+                soundFail();
+                fb.innerHTML = "❌ SALAH KOORDINAT. Hitung kembali 3 &times; 50 kemudian ditambah 7!";
+                fb.className = "text-center font-extrabold text-sm mt-1 text-red-500";
+            }
+        }
+
+        function validateP3() {
+            const val = parseInt(document.getElementById('p3Input').value);
+            const fb = document.getElementById('p3Feedback');
+            if (val === 96) {
+                soundSuccess();
+                fb.innerHTML = "🎯 VIRUS DIKARANTINA! u<sub>6</sub> = 3 &times; 2<sup>5</sup> = 96.";
+                fb.className = "text-center font-extrabold text-sm mt-1 text-emerald-500";
+                score += 20;
+                document.getElementById('userScore').innerText = score;
+            } else {
+                soundFail();
+                fb.innerHTML = "❌ KARANTINA GAGAL. Ingat rumus geometri: u<sub>n</sub> = a &middot; r<sup>n - 1</sup>. Suku ke-6 berarti pangkatnya 5!";
+                fb.className = "text-center font-extrabold text-sm mt-1 text-red-500";
+            }
+        }
+
+        function checkP4(btn, status) {
+            const fb = document.getElementById('p4Feedback');
+            if (status === 'correct') {
+                soundSuccess();
+                fb.innerHTML = "🎯 TEPAT! Suku berikutnya adalah 3 &divide; 3 = 1.";
+                fb.className = "text-center font-extrabold text-sm mt-2 text-emerald-500";
+                score += 15;
+                document.getElementById('userScore').innerText = score;
+            } else {
+                soundFail();
+                fb.innerHTML = "❌ SALAH! Barisan ini dibagi 3 secara terus-menerus.";
+                fb.className = "text-center font-extrabold text-sm mt-2 text-red-500";
+            }
+        }
+
+        function validateP5() {
+            const val = parseInt(document.getElementById('p5Input').value);
+            const fb = document.getElementById('p5Feedback');
+            if (val === 100) {
+                soundSuccess();
+                fb.innerHTML = "🎯 SANDI TERBONGKAR! u<sub>10</sub> = 10<sup>2</sup> = 100.";
+                fb.className = "text-center font-extrabold text-sm mt-1 text-emerald-500";
+                score += 20;
+                document.getElementById('userScore').innerText = score;
+            } else {
+                soundFail();
+                fb.innerHTML = "❌ SALAH. Rumus baris kuadrat murni adalah u<sub>n</sub> = n<sup>2</sup>.";
+                fb.className = "text-center font-extrabold text-sm mt-1 text-red-500";
+            }
+        }
+
+        function checkP6(btn, status) {
+            const fb = document.getElementById('p6Feedback');
+            if (status === 'correct') {
+                soundSuccess();
+                fb.innerHTML = "🎯 PORTAL TERBUKA! 13 + 21 = 34.";
+                fb.className = "text-center font-extrabold text-sm mt-2 text-emerald-500";
+                score += 20;
+                document.getElementById('userScore').innerText = score;
+            } else {
+                soundFail();
+                fb.innerHTML = "❌ SALAH. Tambahkan dua angka terakhir secara berurutan!";
+                fb.className = "text-center font-extrabold text-sm mt-2 text-red-500";
+            }
+        }
+
+        function validateP7() {
+            const val = parseInt(document.getElementById('p7Input').value);
+            const fb = document.getElementById('p7Feedback');
+            if (val === 110) {
+                soundSuccess();
+                fb.innerHTML = "🎯 REAKTOR SEIMBANG! S<sub>10</sub> = 5 &times; (2 + 20) = 110.";
+                fb.className = "text-center font-extrabold text-sm mt-1 text-emerald-500";
+                score += 25;
+                document.getElementById('userScore').innerText = score;
+            } else {
+                soundFail();
+                fb.innerHTML = "❌ OVERLOAD! Gunakan rumus S<sub>n</sub> = <span class=\"math-style\">(n / 2)</span> &times; (a + u<sub>10</sub>).";
+                fb.className = "text-center font-extrabold text-sm mt-1 text-red-500";
+            }
+        }
+
+        // --- Boss Questions ---
+        function checkBoss1(btn, status) {
+            const fb = document.getElementById('boss1Feedback');
+            if (status === 'correct') {
+                soundSuccess();
+                fb.innerHTML = "🎯 SEGEL 1 HANCUR! u<sub>12</sub> = 3 + 11 &times; 4 = 47.";
+                fb.className = "text-center font-extrabold text-sm mt-2 text-emerald-500";
+                score += 30;
+                document.getElementById('userScore').innerText = score;
+            } else {
+                soundFail();
+                fb.innerHTML = "❌ GAGAL. Rumus suku ke-12 adalah 3 + (12 - 1) &times; 4.";
+                fb.className = "text-center font-extrabold text-sm mt-2 text-red-500";
+            }
+        }
+
+        function validateBoss2() {
+            const val = parseInt(document.getElementById('boss2Input').value);
+            const fb = document.getElementById('boss2Feedback');
+            if (val === 80) {
+                soundSuccess();
+                fb.innerHTML = "🎯 SEGEL 2 HANCUR! u<sub>5</sub> = 5 &times; 2<sup>4</sup> = 80.";
+                fb.className = "text-center font-extrabold text-sm mt-1 text-emerald-500";
+                score += 30;
+                document.getElementById('userScore').innerText = score;
+            } else {
+                soundFail();
+                fb.innerHTML = "❌ FREKUENSI SALAH. Ingat u<sub>5</sub> = a &middot; r<sup>4</sup>.";
+                fb.className = "text-center font-extrabold text-sm mt-1 text-red-500";
+            }
+        }
+
+        function validateBoss3() {
+            const val = parseInt(document.getElementById('boss3Input').value);
+            const fb = document.getElementById('boss3Feedback');
+            if (val === 400) {
+                soundLevelUp();
+                fb.innerHTML = "🎯 SEGEL AKHIR HANCUR! S<sub>20</sub> = 400. GERBANG QUANTUM TERBUKA!";
+                fb.className = "text-center font-extrabold text-sm mt-1 text-emerald-500 animate-pulse";
+                score += 50;
+                document.getElementById('userScore').innerText = score;
+                triggerAlert('MISSION SUCCESS!', 'Gerbang Infinite Gate terbuka lebar! Kamu resmi lolos tantangan Cambridge!', '🚀');
+            } else {
+                soundFail();
+                fb.innerHTML = "❌ GAGAL TOTAL. Gunakan rumus S<sub>n</sub> = <span class=\"math-style\">(n / 2)</span> [2a + (n - 1)d].";
+                fb.className = "text-center font-extrabold text-sm mt-1 text-red-500";
+            }
+        }
+
+        function selectReflect(card, val) {
+            const fb = document.getElementById('reflectFeedback');
+            fb.innerHTML = `Terima kasih atas jurnal refleksimu! Skor akhir kognitifmu bertambah menjadi ${score + 20}. Selesai dengan bangga!`;
+        }
+
+        // --- Dynamic Generator to fill precisely up to 35 interactive pages seamlessly ---
+        function createDynamicSlide(num) {
+            const wrapper = document.getElementById('slides-content');
+            let existing = document.getElementById('slide-' + num);
+            
+            if (!existing) {
+                let newSlide = document.createElement('div');
+                newSlide.id = 'slide-' + num;
+                newSlide.className = 'slide flex-col gap-4';
+
+                // Generates varying Cambridge topics based on sequence formulas
+                let baseVal = 3 + (num % 5);
+                let diffVal = 2 + (num % 3);
+                let findTerm = 5 + (num % 4);
+                let correctAns = baseVal + (findTerm - 1) * diffVal;
+
+                newSlide.innerHTML = `
+                    <h3 class="heading-font text-2xl text-slate-900 font-extrabold">🚀 Quantum Challenge: Gate ${num}</h3>
+                    <p class="text-slate-500 text-sm">Gunakan kecepatan berpikir pintarmu untuk melewati gerbang perlindungan enkripsi ${num}:</p>
+                    <div class="bg-slate-900 text-cyan-300 text-center py-6 rounded-2xl font-mono text-2xl font-extrabold my-2">
+                        Suku pertama (a) = ${baseVal} &nbsp;|&nbsp; Beda konstan (d) = +${diffVal}
+                    </div>
+                    <p class="text-sm text-slate-600">Berapakah nilai aljabar untuk <strong>Suku ke-${findTerm} (<span class="math-style">u<sub>${findTerm}</sub></span>)</strong>?</p>
+                    <div class="flex flex-col gap-3 max-w-xs mx-auto my-2">
+                        <input type="number" id="dynInput-${num}" class="px-4 py-3 rounded-xl border-2 border-slate-200 text-center font-extrabold text-lg focus:border-cyan-500 outline-none" placeholder="Jawabanmu">
+                        <button onclick="validateDynamic(${num}, ${correctAns})" class="bg-cyan-500 text-white font-bold py-3 rounded-xl hover:bg-cyan-600 transition-all text-sm">Verifikasi Sistem</button>
+                    </div>
+                    <div id="dynFeedback-${num}" class="text-center font-extrabold text-sm mt-1"></div>
+                `;
+                wrapper.appendChild(newSlide);
+                newSlide.classList.add('active');
+            } else {
+                existing.classList.add('active');
+            }
+        }
+
+        function validateDynamic(num, correct) {
+            const inputVal = parseInt(document.getElementById(`dynInput-${num}`).value);
+            const fb = document.getElementById(`dynFeedback-${num}`);
+
+            if (inputVal === correct) {
+                soundSuccess();
+                fb.innerHTML = "🎯 COGNITIVE UNLOCKED! Akses gerbang berikutnya disetujui.";
+                fb.className = "text-center font-extrabold text-sm mt-1 text-emerald-500";
+                score += 10;
+                document.getElementById('userScore').innerText = score;
+            } else {
+                soundFail();
+                fb.innerHTML = `❌ REJECTED. Coba lagi! Rumusnya: Suku ke-${(num % 4) + 5} = a + (n - 1)d = ${correct}.`;
+                fb.className = "text-center font-extrabold text-sm mt-1 text-red-500";
+            }
+        }
+
+        // Initial setup on window load
+        window.onload = function() {
+            updateUI();
+        }
+    </script>
+</body>
+</html>

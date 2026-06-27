@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sequence Drill Master - Persiapan Seleksi Masuk SMA Unggulan</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f0fdfa;
+            background-image: radial-gradient(#ccfbf1 1.5px, transparent 1.5px);
+            background-size: 24px 24px;
+        }
+        .heading-font {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        /* Custom scrollbar for question grid and scratchpad */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 8px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 8px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        /* Canvas scratchpad cursor */
+        #scratchCanvas {
+            cursor: crosshair;
+            touch-action: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between text-slate-800">
+
+    <!-- Top Navigation Header (Matching image_6e3206.jpg style) -->
+    <header class="w-full bg-white border-b-4 border-emerald-500 px-4 md:px-8 py-4 flex flex-wrap justify-between items-center gap-4 shadow-sm sticky top-0 z-40">
+        <div class="flex items-center gap-3">
+            <div class="w-12 h-12 bg-emerald-100 rounded-2xl flex items-center justify-center text-2xl text-emerald-600">
+                📊
+            </div>
+            <div>
+                <h1 class="heading-font text-lg md:text-xl text-emerald-700 font-extrabold tracking-wide">Sequence Drill Master</h1>
+                <p class="text-[10px] md:text-xs text-slate-400 font-bold tracking-wider uppercase">Persiapan Seleksi Masuk SMA Unggulan &amp; Olimpiade</p>
+            </div>
+        </div>
+        
+        <!-- Score & Tools -->
+        <div class="flex items-center gap-3 md:gap-4">
+            <div class="bg-amber-100 px-3 py-1.5 md:px-4 md:py-2 rounded-2xl border-2 border-amber-200 flex items-center gap-2">
+                <span class="text-sm md:text-base">✨</span>
+                <span class="font-extrabold text-amber-800 text-xs md:text-sm"><span id="xpDisplay">0</span> XP</span>
+            </div>
+            <button onclick="toggleScratchpad()" class="bg-emerald-600 text-white font-bold py-1.5 px-3 md:py-2 md:px-4 rounded-2xl border-b-4 border-emerald-800 hover:bg-emerald-700 active:scale-95 transition-all text-xs md:text-sm flex items-center gap-2">
+                ✏️ Papan Cakar
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Dashboard Container -->
+    <main class="max-w-7xl w-full mx-auto p-4 md:p-6 lg:p-8 flex-grow">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            <!-- LEFT COLUMN: Mission Control & Navigation Map -->
+            <section class="lg:col-span-4 space-y-6">
+                
+                <!-- Mission Analytics Card -->
+                <div class="bg-white rounded-3xl p-5 shadow-md border-2 border-emerald-100/80">
+                    <div class="flex justify-between items-center mb-4 pb-3 border-b border-slate-100">
+                        <h2 class="heading-font font-bold text-slate-700 text-sm tracking-wider uppercase">Analisis Misi</h2>
+                        <span class="bg-emerald-50 text-emerald-700 font-black text-xs px-2.5 py-1 rounded-full border border-emerald-200" id="answeredRatio">0/30 Terjawab</span>
+                    </div>
+                    
+                    <!-- Stats Badges -->
+                    <div class="grid grid-cols-3 gap-2 text-center mb-5">
+                        <div class="bg-emerald-50 rounded-2xl p-2.5 border border-emerald-100">
+                            <span class="text-[10px] font-bold text-emerald-700 uppercase block">Benar</span>
+                            <span class="text-lg font-extrabold text-emerald-800 block" id="correctCount">0</span>
+                        </div>
+                        <div class="bg-rose-50 rounded-2xl p-2.5 border border-rose-100">
+                            <span class="text-[10px] font-bold text-rose-700 uppercase block">Salah</span>
+                            <span class="text-lg font-extrabold text-rose-800 block" id="wrongCount">0</span>
+                        </div>
+                        <div class="bg-sky-50 rounded-2xl p-2.5 border border-sky-100">
+                            <span class="text-[10px] font-bold text-sky-700 uppercase block">Akurasi</span>
+                            <span class="text-lg font-extrabold text-sky-800 block" id="accuracyPct">0%</span>
+                        </div>
+                    </div>
+
+                    <!-- Category Selector -->
+                    <div class="space-y-2">
+                        <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest block mb-1">Pilih Kategori</span>
+                        <button onclick="filterCategory('all')" id="catBtn-all" class="w-full text-left px-4 py-2.5 rounded-xl border-2 border-slate-100 bg-emerald-600 text-white font-bold text-xs md:text-sm transition-all flex justify-between items-center">
+                            <span>🌐 Semua Kategori (1-30)</span>
+                            <span class="text-[10px] bg-black/10 px-2 py-0.5 rounded-full" id="count-all">30</span>
+                        </button>
+                        <button onclick="filterCategory('fondasi')" id="catBtn-fondasi" class="w-full text-left px-4 py-2.5 rounded-xl border-2 border-slate-100 bg-slate-50 text-slate-600 hover:bg-slate-100 font-bold text-xs md:text-sm transition-all flex justify-between items-center">
+                            <span>🟢 1. Fondasi Dasar (1-10)</span>
+                            <span class="text-[10px] bg-slate-200 text-slate-600 px-2 py-0.5 rounded-full" id="count-fondasi">10</span>
+                        </button>
+                        <button onclick="filterCategory('menengah')" id="catBtn-menengah" class="w-full text-left px-4 py-2.5 rounded-xl border-2 border-slate-100 bg-slate-50 text-slate-600 hover:bg-slate-100 font-bold text-xs md:text-sm transition-all flex justify-between items-center">
+                            <span>🔵 2. Aritmetika &amp; Geometri (11-20)</span>
+                            <span class="text-[10px] bg-slate-200 text-slate-600 px-2 py-0.5 rounded-full" id="count-menengah">10</span>
+                        </button>
+                        <button onclick="filterCategory('aplikasi')" id="catBtn-aplikasi" class="w-full text-left px-4 py-2.5 rounded-xl border-2 border-slate-100 bg-slate-50 text-slate-600 hover:bg-slate-100 font-bold text-xs md:text-sm transition-all flex justify-between items-center">
+                            <span>🟡 3. Deret &amp; Aplikasi (21-25)</span>
+                            <span class="text-[10px] bg-slate-200 text-slate-600 px-2 py-0.5 rounded-full" id="count-aplikasi">5</span>
+                        </button>
+                        <button onclick="filterCategory('hots')" id="catBtn-hots" class="w-full text-left px-4 py-2.5 rounded-xl border-2 border-slate-100 bg-slate-50 text-slate-600 hover:bg-slate-100 font-bold text-xs md:text-sm transition-all flex justify-between items-center">
+                            <span>🔴 4. Advanced &amp; HOTS (26-30)</span>
+                            <span class="text-[10px] bg-slate-200 text-slate-600 px-2 py-0.5 rounded-full" id="count-hots">5</span>
+                        </button>
+                    </div>
+
+                    <!-- Question Grid Navigation Map -->
+                    <div class="mt-6">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest block">Peta Soal</span>
+                            <span class="text-[9px] text-slate-400 font-semibold uppercase">Klik nomor untuk lompat</span>
+                        </div>
+                        <div class="grid grid-cols-5 gap-2 max-h-[190px] overflow-y-auto pr-1" id="questionGrid">
+                            <!-- Question buttons will be dynamically rendered here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- RIGHT COLUMN: Dynamic Interactive Question Card -->
+            <section class="lg:col-span-8">
+                <div class="bg-white rounded-3xl p-6 md:p-8 shadow-xl border-4 border-slate-100/90 min-h-[500px] flex flex-col justify-between relative" id="questionCard">
+                    <!-- Dynamic Content Area -->
+                    <div id="cardContent">
+                        <!-- Top status markers inside question box -->
+                        <div class="flex justify-between items-center mb-6">
+                            <span class="text-xs font-extrabold uppercase px-3 py-1 rounded-full border bg-emerald-50 text-emerald-700 border-emerald-200" id="currentCategoryLabel">Kategori: Fondasi Dasar</span>
+                            <span class="text-xs font-black text-amber-600 bg-amber-50 border border-amber-200 px-3 py-1 rounded-full flex items-center gap-1">
+                                ⚡ +<span id="currentXpLabel">10</span> XP
+                            </span>
+                        </div>
+
+                        <!-- Question Number & Text -->
+                        <h3 class="heading-font text-2xl text-slate-900 font-black mb-4">Soal No. <span id="currentQuestionId">1</span></h3>
+                        
+                        <!-- Mathematical Question Frame -->
+                        <div class="bg-slate-50 border-2 border-slate-100 rounded-2xl p-6 mb-6 leading-relaxed text-sm md:text-base text-slate-700" id="questionText">
+                            <!-- Injected question markup -->
+                        </div>
+
+                        <!-- Interactive Options Area (Grid layout) -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6" id="optionsContainer">
+                            <!-- Dynamic options injected here -->
+                        </div>
+
+                        <!-- Post-answer explanation panel -->
+                        <div id="explanationPanel" class="hidden bg-emerald-50 border-2 border-emerald-100 rounded-2xl p-5 mb-6 animate-fadeIn">
+                            <h4 class="font-extrabold text-emerald-800 text-sm uppercase tracking-wider mb-2 flex items-center gap-2">
+                                💡 Pembahasan Lengkap:
+                            </h4>
+                            <p class="text-slate-600 text-xs md:text-sm leading-relaxed" id="explanationText">
+                                <!-- Injected explanation -->
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Nav Panel inside the main card -->
+                    <div class="flex justify-between items-center mt-6 pt-5 border-t border-slate-100">
+                        <button id="prevBtn" onclick="navigatePrev()" class="bg-slate-100 text-slate-600 font-bold py-2.5 px-6 rounded-xl hover:bg-slate-200 active:scale-95 transition-all text-xs flex items-center gap-1">
+                            ◀ Sebelumnya
+                        </button>
+                        <span class="text-xs text-slate-400 font-black" id="currentProgressFraction">1/30 Soal</span>
+                        <button id="nextBtn" onclick="navigateNext()" class="bg-emerald-600 text-white font-black py-2.5 px-6 rounded-xl border-b-4 border-emerald-800 hover:bg-emerald-700 active:scale-95 transition-all text-xs flex items-center gap-1">
+                            Selanjutnya ▶
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full bg-slate-900 text-slate-500 py-4 text-center text-xs mt-12 border-t-4 border-emerald-700 font-mono">
+        Sequence Drill Master © 2026 • Kurikulum Nasional &amp; Tes Masuk SMA Unggulan
+    </footer>
+
+    <!-- INTERACTIVE WHITEBOARD MODAL (Papan Cakar) -->
+    <div id="scratchpadModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4 z-50 animate-fadeIn">
+        <div class="bg-white rounded-3xl p-5 max-w-3xl w-full border-4 border-emerald-200 shadow-2xl flex flex-col gap-4">
+            <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+                <div class="flex items-center gap-2">
+                    <span class="text-xl">✏️</span>
+                    <h4 class="heading-font font-black text-lg text-slate-800">Papan Cakar (Scratchpad)</h4>
+                </div>
+                <div class="flex items-center gap-2">
+                    <!-- Tool colors -->
+                    <div class="flex gap-1 bg-slate-100 p-1 rounded-lg">
+                        <button onclick="setScratchColor('#1e293b')" class="w-6 h-6 rounded-full bg-slate-800 border-2 border-white scale-110" id="color-slate"></button>
+                        <button onclick="setScratchColor('#dc2626')" class="w-6 h-6 rounded-full bg-rose-600 border-2 border-white" id="color-red"></button>
+                        <button onclick="setScratchColor('#2563eb')" class="w-6 h-6 rounded-full bg-blue-600 border-2 border-white" id="color-blue"></button>
+                        <button onclick="setScratchColor('#16a34a')" class="w-6 h-6 rounded-full bg-emerald-600 border-2 border-white" id="color-green"></button>
+                    </div>
+                    <button onclick="clearCanvas()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-1.5 px-3 rounded-lg text-xs transition-all">
+                        Bersihkan
+                    </button>
+                    <button onclick="toggleScratchpad()" class="bg-rose-500 hover:bg-rose-600 text-white font-extrabold py-1.5 px-3 rounded-lg text-xs transition-all">
+                        Tutup
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Drawing Canvas Wrapper -->
+            <div class="bg-slate-50 border-2 border-slate-200 rounded-2xl overflow-hidden shadow-inner h-[400px]">
+                <canvas id="scratchCanvas" class="w-full h-full bg-slate-50"></canvas>
+            </div>
+            <p class="text-[10px] text-slate-400 text-center font-mono">Gunakan mouse atau layar sentuh untuk menghitung coret-coret.</p>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT APPLICATION CORE -->
+    <script>
+        const questions = [
+            // CATEGORY 1: FONDASI DASAR (1-10)
+            {
+                id: 1,
+                category: "Fondasi Dasar",
+                categoryKey: "fondasi",
+                xp: 10,
+                questionText: "Tentukan rumus suku ke-<i>n</i> (<i>u<sub>n</sub></i>) dari barisan aritmetika berikut:<br><div class='font-mono my-3 text-center text-xl text-emerald-600 font-extrabold bg-emerald-50/50 py-2 rounded-xl'>3, 7, 11, 15, ...</div>",
+                options: [
+                    { key: "A", text: "<i>u<sub>n</sub></i> = 3<i>n</i> + 1" },
+                    { key: "B", text: "<i>u<sub>n</sub></i> = 3<i>n</i> - 1" },
+                    { key: "C", text: "<i>u<sub>n</sub></i> = 4<i>n</i> - 1" },
+                    { key: "D", text: "<i>u<sub>n</sub></i> = 4<i>n</i> + 1" }
+                ],
+                correct: "C",
+                explanation: "Barisan ini memiliki suku pertama (<i>a</i>) = 3 dan beda ($d$) = 7 - 3 = 4.<br>Gunakan rumus: <i>u<sub>n</sub></i> = <i>a</i> + (<i>n</i> - 1)<i>d</i><br><i>u<sub>n</sub></i> = 3 + (<i>n</i> - 1)4 = 3 + 4<i>n</i> - 4 = 4<i>n</i> - 1."
+            },
+            {
+                id: 2,
+                category: "Fondasi Dasar",
+                categoryKey: "fondasi",
+                xp: 10,
+                questionText: "Diketahui suatu barisan aritmetika memiliki suku pertama <i>a</i> = 5 dan beda <i>d</i> = 3. Suku ke-15 (<i>u<sub>15</sub></i>) dari barisan tersebut adalah...",
+                options: [
+                    { key: "A", text: "47" },
+                    { key: "B", text: "44" },
+                    { key: "C", text: "50" },
+                    { key: "D", text: "53" }
+                ],
+                correct: "A",
+                explanation: "Suku pertama (<i>a</i>) = 5, beda (<i>d</i>) = 3.<br>Suku ke-15: <i>u<sub>15</sub></i> = <i>a</i> + 14<i>d</i> = 5 + 14(3) = 5 + 42 = 47."
+            },
+            {
+                id: 3,
+                category: "Fondasi Dasar",
+                categoryKey: "fondasi",
+                xp: 10,
+                questionText: "Berapakah nilai beda (<i>d</i>) dari barisan aritmetika yang terus menurun berikut?<br><div class='font-mono my-3 text-center text-xl text-emerald-600 font-extrabold bg-emerald-50/50 py-2 rounded-xl'>20, 17, 14, 11, ...</div>",
+                options: [
+                    { key: "A", text: "3" },
+                    { key: "B", text: "-4" },
+                    { key: "C", text: "4" },
+                    { key: "D", text: "-3" }
+                ],
+                correct: "D",
+                explanation: "Beda didapatkan dengan mengurangkan suku setelahnya dengan suku sebelumnya.<br><i>d</i> = <i>u<sub>2</sub></i> - <i>u<sub>1</sub></i> = 17 - 20 = -3."
+            },
+            {
+                id: 4,
+                category: "Fondasi Dasar",
+                categoryKey: "fondasi",
+                xp: 10,
+                questionText: "Tentukan suku ke-6 (<i>u<sub>6</sub></i>) dari barisan geometri bertingkat naik berikut:<br><div class='font-mono my-3 text-center text-xl text-emerald-600 font-extrabold bg-emerald-50/50 py-2 rounded-xl'>2, 6, 18, 54, ...</div>",
+                options: [
+                    { key: "A", text: "162" },
+                    { key: "B", text: "324" },
+                    { key: "C", text: "486" },
+                    { key: "D", text: "972" }
+                ],
+                correct: "C",
+                explanation: "Suku pertama (<i>a</i>) = 2, rasio (<i>r</i>) = 6 / 2 = 3.<br>Rumus suku ke-<i>n</i> barisan geometri: <i>u<sub>n</sub></i> = <i>a</i> &middot; <i>r</i><sup><i>n</i>-1</sup><br><i>u<sub>6</sub></i> = 2 &middot; 3<sup>5</sup> = 2 &middot; 243 = 486."
+            },
+            {
+                id: 5,
+                category: "Fondasi Dasar",
+                categoryKey: "fondasi",
+                xp: 10,
+                questionText: "Tentukan rasio (<i>r</i>) dari barisan geometri yang menyusut secara eksponensial di bawah ini:<br><div class='font-mono my-3 text-center text-xl text-emerald-600 font-extrabold bg-emerald-50/50 py-2 rounded-xl'>81, 27, 9, 3, ...</div>",
+                options: [
+                    { key: "A", text: "3" },
+                    { key: "B", text: "1/3" },
+                    { key: "C", text: "-3" },
+                    { key: "D", text: "1/9" }
+                ],
+                correct: "B",
+                explanation: "Rasio (<i>r</i>) barisan geometri didapat dari pembagian suku kedua dengan suku pertama.<br><i>r</i> = <i>u<sub>2</sub></i> / <i>u<sub>1</sub></i> = 27 / 81 = 1/3."
+            },
+            {
+                id: 6,
+                category: "Fondasi Dasar",
+                categoryKey: "fondasi",
+                xp: 10,
+                questionText: "Barisan bilangan Fibonacci didefinisikan sebagai penjumlahan dua suku sebelumnya: <br><b>1, 1, 2, 3, 5, 8, ...</b><br>Tentukan nilai suku ke-8 (<i>u<sub>8</sub></i>) dari barisan tersebut.",
+                options: [
+                    { key: "A", text: "21" },
+                    { key: "B", text: "13" },
+                    { key: "C", text: "34" },
+                    { key: "D", text: "55" }
+                ],
+                correct: "A",
+                explanation: "Lanjutkan penjumlahan suku Fibonacci:<br>Suku 1: 1<br>Suku 2: 1<br>Suku 3: 2<br>Suku 4: 3<br>Suku 5: 5<br>Suku 6: 8<br>Suku 7: 5 + 8 = 13<br>Suku 8: 8 + 13 = 21."
+            },
+            {
+                id: 7,
+                category: "Fondasi Dasar",
+                categoryKey: "fondasi",
+                xp: 10,
+                questionText: "Temukan pola aljabar murni dari barisan kuadrat berikut:<br><div class='font-mono my-3 text-center text-xl text-emerald-600 font-extrabold bg-emerald-50/50 py-2 rounded-xl'>1, 4, 9, 16, 25, ...</div>",
+                options: [
+                    { key: "A", text: "<i>u<sub>n</sub></i> = 2<i>n</i> - 1" },
+                    { key: "B", text: "<i>u<sub>n</sub></i> = 2<i>n</i><sup>2</sup>" },
+                    { key: "C", text: "<i>u<sub>n</sub></i> = <i>n</i><sup>2</sup> + 1" },
+                    { key: "D", text: "<i>u<sub>n</sub></i> = <i>n</i><sup>2</sup>" }
+                ],
+                correct: "D",
+                explanation: "Pola di atas adalah barisan bilangan kuadrat murni:<br>1<sup>2</sup>=1, 2<sup>2</sup>=4, 3<sup>2</sup>=9, 4<sup>2</sup>=16, dst. Maka <i>u<sub>n</sub></i> = <i>n</i><sup>2</sup>."
+            },
+            {
+                id: 8,
+                category: "Fondasi Dasar",
+                categoryKey: "fondasi",
+                xp: 10,
+                questionText: "Tentukan jumlah 5 suku pertama (<i>S<sub>5</sub></i>) dari deret aritmetika berikut:<br><div class='font-mono my-3 text-center text-xl text-emerald-600 font-extrabold bg-emerald-50/50 py-2 rounded-xl'>2 + 5 + 8 + 11 + ...</div>",
+                options: [
+                    { key: "A", text: "35" },
+                    { key: "B", text: "45" },
+                    { key: "C", text: "40" },
+                    { key: "D", text: "50" }
+                ],
+                correct: "C",
+                explanation: "<i>a</i> = 2, <i>d</i> = 3, <i>n</i> = 5.<br>Rumus: <i>S<sub>n</sub></i> = <sup><i>n</i></sup>/<sub>2</sub> [2<i>a</i> + (<i>n</i>-1)<i>d</i>]<br><i>S<sub>5</sub></i> = <sup>5</sup>/<sub>2</sub> [2(2) + 4(3)] = 2.5 [4 + 12] = 2.5 &times; 16 = 40."
+            },
+            {
+                id: 9,
+                category: "Fondasi Dasar",
+                categoryKey: "fondasi",
+                xp: 10,
+                questionText: "Suatu barisan kuadrat memiliki rumus umum <i>u<sub>n</sub></i> = <i>n</i><sup>2</sup> - 2<i>n</i> + 3. Hitunglah nilai dari suku ke-4 (<i>u<sub>4</sub></i>) barisan tersebut.",
+                options: [
+                    { key: "A", text: "11" },
+                    { key: "B", text: "9" },
+                    { key: "C", text: "13" },
+                    { key: "D", text: "15" }
+                ],
+                correct: "A",
+                explanation: "Substitusikan nilai <i>n</i> = 4 ke rumus:<br><i>u<sub>4</sub></i> = 4<sup>2</sup> - 2(4) + 3 = 16 - 8 + 3 = 11."
+            },
+            {
+                id: 10,
+                category: "Fondasi Dasar",
+                categoryKey: "fondasi",
+                xp: 10,
+                questionText: "Hitunglah jumlah 4 suku pertama (<i>S<sub>4</sub></i>) dari deret geometri berikut:<br><div class='font-mono my-3 text-center text-xl text-emerald-600 font-extrabold bg-emerald-50/50 py-2 rounded-xl'>3 + 6 + 12 + 24 + ...</div>",
+                options: [
+                    { key: "A", text: "35" },
+                    { key: "B", text: "55" },
+                    { key: "C", text: "65" },
+                    { key: "D", text: "45" }
+                ],
+                correct: "D",
+                explanation: "Deret ini pendek sehingga dapat dijumlahkan langsung:<br><i>S<sub>4</sub></i> = 3 + 6 + 12 + 24 = 45.<br>Gunakan rumus geometri: <i>S<sub>4</sub></i> = 3 &middot; (2<sup>4</sup> - 1) / (2 - 1) = 3 &middot; (16 - 1) = 45."
+            },
+
+            // CATEGORY 2: BARISAN ARITMETIKA & GEOMETRI MENENGAH (11-20)
+            {
+                id: 11,
+                category: "Aritmetika & Geometri",
+                categoryKey: "menengah",
+                xp: 15,
+                questionText: "Diketahui suku ke-3 (<i>u<sub>3</sub></i>) dari barisan aritmetika adalah 11 dan suku ke-8 (<i>u<sub>8</sub></i>) adalah 31. Tentukan nilai suku pertama (<i>a</i>).",
+                options: [
+                    { key: "A", text: "4" },
+                    { key: "B", text: "3" },
+                    { key: "C", text: "5" },
+                    { key: "D", text: "6" }
+                ],
+                correct: "B",
+                explanation: "Suku ke-<i>n</i>: <i>u<sub>n</sub></i> = <i>a</i> + (<i>n</i>-1)<i>d</i><br><i>u<sub>8</sub></i> - <i>u<sub>3</sub></i> = 5<i>d</i> = 31 - 11 = 20 &rArr; <i>d</i> = 4.<br>Gunakan <i>u<sub>3</sub></i>: 11 = <i>a</i> + 2(4) &rArr; 11 = <i>a</i> + 8 &rArr; <i>a</i> = 3."
+            },
+            {
+                id: 12,
+                category: "Aritmetika & Geometri",
+                categoryKey: "menengah",
+                xp: 15,
+                questionText: "Diketahui sebuah barisan aritmetika: <br><div class='font-mono my-3 text-center text-xl text-emerald-600 font-extrabold bg-emerald-50/50 py-2 rounded-xl'>2, 5, 8, ..., 89</div> Banyaknya suku (<i>n</i>) pada barisan tersebut adalah...",
+                options: [
+                    { key: "A", text: "28" },
+                    { key: "B", text: "29" },
+                    { key: "C", text: "30" },
+                    { key: "D", text: "31" }
+                ],
+                correct: "C",
+                explanation: "<i>a</i> = 2, <i>d</i> = 3, <i>u<sub>n</sub></i> = 89.<br>89 = 2 + (<i>n</i> - 1)3 &rArr; 87 = 3(<i>n</i> - 1)<br>&rArr; 29 = <i>n</i> - 1 &rArr; <i>n</i> = 30."
+            },
+            {
+                id: 13,
+                category: "Aritmetika & Geometri",
+                categoryKey: "menengah",
+                xp: 15,
+                questionText: "Hitunglah jumlah semua bilangan genap yang bernilai mulai dari 2 sampai dengan 50.",
+                options: [
+                    { key: "A", text: "650" },
+                    { key: "B", text: "600" },
+                    { key: "C", text: "700" },
+                    { key: "D", text: "750" }
+                ],
+                correct: "A",
+                explanation: "Deret: 2 + 4 + 6 + ... + 50.<br>Ini deret aritmetika dengan <i>a</i>=2, <i>d</i>=2, <i>u<sub>n</sub></i>=50.<br>Banyak suku: 50 = 2 + (<i>n</i>-1)2 &rArr; 25 suku.<br>Jumlah: <i>S<sub>25</sub></i> = <sup>25</sup>/<sub>2</sub> (2 + 50) = 12.5 &times; 52 = 650."
+            },
+            {
+                id: 14,
+                category: "Aritmetika & Geometri",
+                categoryKey: "menengah",
+                xp: 15,
+                questionText: "Suku ke-2 dari barisan geometri adalah 6 dan suku ke-5 adalah 48. Suku ke-8 dari barisan geometri tersebut adalah...",
+                options: [
+                    { key: "A", text: "192" },
+                    { key: "B", text: "512" },
+                    { key: "C", text: "768" },
+                    { key: "D", text: "384" }
+                ],
+                correct: "D",
+                explanation: "<i>u<sub>2</sub></i> = <i>ar</i> = 6 dan <i>u<sub>5</sub></i> = <i>ar</i><sup>4</sup> = 48.<br><i>u<sub>5</sub></i> / <i>u<sub>2</sub></i> = <i>r</i><sup>3</sup> = 48 / 6 = 8 &rArr; <i>r</i> = 2.<br>Maka <i>a</i> = 6/2 = 3.<br>Suku ke-8: <i>u<sub>8</sub></i> = <i>a</i> &middot; <i>r</i><sup>7</sup> = 3 &middot; 2<sup>7</sup> = 3 &middot; 128 = 384."
+            },
+            {
+                id: 15,
+                category: "Aritmetika & Geometri",
+                categoryKey: "menengah",
+                xp: 15,
+                questionText: "Tentukan suku tengah (<i>u<sub>t</sub></i>) dari barisan aritmetika dengan suku-suku berikut:<br><div class='font-mono my-3 text-center text-xl text-emerald-600 font-extrabold bg-emerald-50/50 py-2 rounded-xl'>5, 11, 17, ..., 119</div>",
+                options: [
+                    { key: "A", text: "57" },
+                    { key: "B", text: "62" },
+                    { key: "C", text: "67" },
+                    { key: "D", text: "72" }
+                ],
+                correct: "B",
+                explanation: "Rumus suku tengah aritmetika: <i>u<sub>t</sub></i> = <sup>(<i>a</i> + <i>u<sub>n</sub></i>)</sup>/<sub>2</sub><br><i>u<sub>t</sub></i> = (5 + 119) / 2 = 124 / 2 = 62."
+            },
+            {
+                id: 16,
+                category: "Aritmetika & Geometri",
+                categoryKey: "menengah",
+                xp: 15,
+                questionText: "Diketahui deret geometri memiliki jumlah suku ke-<i>n</i> yang dirumuskan dengan <i>S<sub>n</sub></i> = 2<sup><i>n</i>+1</sup> - 2. Tentukan nilai suku ke-5 (<i>u<sub>5</sub></i>).",
+                options: [
+                    { key: "A", text: "16" },
+                    { key: "B", text: "30" },
+                    { key: "C", text: "32" },
+                    { key: "D", text: "62" }
+                ],
+                correct: "C",
+                explanation: "Gunakan hubungan <i>u<sub>n</sub></i> = <i>S<sub>n</sub></i> - <i>S<sub>n-1</sub></i><br><i>u<sub>5</sub></i> = <i>S<sub>5</sub></i> - <i>S<sub>4</sub></i><br><i>S<sub>5</sub></i> = 2<sup>6</sup> - 2 = 62.<br><i>S<sub>4</sub></i> = 2<sup>5</sup> - 2 = 30.<br><i>u<sub>5</sub></i> = 62 - 30 = 32."
+            },
+            {
+                id: 17,
+                category: "Aritmetika & Geometri",
+                categoryKey: "menengah",
+                xp: 15,
+                questionText: "Di antara bilangan 4 dan 28 disisipkan sebanyak 5 bilangan sehingga terbentuk barisan aritmetika baru. Beda baru (<i>d'</i>) barisan tersebut adalah...",
+                options: [
+                    { key: "A", text: "4" },
+                    { key: "B", text: "3" },
+                    { key: "C", text: "5" },
+                    { key: "D", text: "6" }
+                ],
+                correct: "A",
+                explanation: "Gunakan rumus penyisipan beda barisan aritmetika:<br><i>d'</i> = <sup>(<i>y</i> - <i>x</i>)</sup>/<sub>(<i>k</i> + 1)</sub><br>di mana <i>x</i> = 4, <i>y</i> = 28, dan <i>k</i> = 5 (jumlah sisipan).<br><i>d'</i> = (28 - 4) / (5 + 1) = 24 / 6 = 4."
+            },
+            {
+                id: 18,
+                category: "Aritmetika & Geometri",
+                categoryKey: "menengah",
+                xp: 15,
+                questionText: "Hitunglah jumlah semua bilangan asli kelipatan 3 yang bernilai kurang dari 100.",
+                options: [
+                    { key: "A", text: "1650" },
+                    { key: "B", text: "1683" },
+                    { key: "C", text: "1722" },
+                    { key: "D", text: "1755" }
+                ],
+                correct: "B",
+                explanation: "Deret: 3 + 6 + 9 + ... + 99.<br><i>a</i>=3, <i>d</i>=3, <i>u<sub>n</sub></i>=99 &rArr; 99 = 3 + (<i>n</i>-1)3 &rArr; <i>n</i>=33.<br><i>S<sub>33</sub></i> = <sup>33</sup>/<sub>2</sub> [3 + 99] = 16.5 &times; 102 = 1683."
+            },
+            {
+                id: 19,
+                category: "Aritmetika & Geometri",
+                categoryKey: "menengah",
+                xp: 15,
+                questionText: "Suku ke-<i>n</i> dari barisan kuadrat adalah <i>u<sub>n</sub></i> = <i>an</i><sup>2</sup> + <i>bn</i>. Jika diketahui <i>u<sub>1</sub></i> = 3 dan <i>u<sub>2</sub></i> = 10, tentukan nilai dari suku ke-3 (<i>u<sub>3</sub></i>).",
+                options: [
+                    { key: "A", text: "18" },
+                    { key: "B", text: "24" },
+                    { key: "C", text: "27" },
+                    { key: "D", text: "21" }
+                ],
+                correct: "D",
+                explanation: "<i>u<sub>1</sub></i> = <i>a</i> + <i>b</i> = 3<br><i>u<sub>2</sub></i> = 4<i>a</i> + 2<i>b</i> = 10 &rArr; 2<i>a</i> + <i>b</i> = 5.<br>Kurangi persamaan: (2<i>a</i> + <i>b</i>) - (<i>a</i> + <i>b</i>) = 5 - 3 &rArr; <i>a</i> = 2, sehingga <i>b</i> = 1.<br>Rumus: <i>u<sub>n</sub></i> = 2<i>n</i><sup>2</sup> + <i>n</i><br>Suku ke-3: <i>u<sub>3</sub></i> = 2(9) + 3 = 18 + 3 = 21."
+            },
+            {
+                id: 20,
+                category: "Aritmetika & Geometri",
+                categoryKey: "menengah",
+                xp: 15,
+                questionText: "Tentukan jumlah deret geometri tak hingga berikut:<br><div class='font-mono my-3 text-center text-xl text-emerald-600 font-extrabold bg-emerald-50/50 py-2 rounded-xl'>18 + 6 + 2 + 2/3 + ...</div>",
+                options: [
+                    { key: "A", text: "25" },
+                    { key: "B", text: "30" },
+                    { key: "C", text: "27" },
+                    { key: "D", text: "36" }
+                ],
+                correct: "C",
+                explanation: "Suku pertama (<i>a</i>) = 18, rasio (<i>r</i>) = 6/18 = 1/3.<br>Rumus deret tak hingga konvergen: <i>S<sub>&infin;</sub></i> = <sup><i>a</i></sup>/<sub>(1 - <i>r</i>)</sub><br><i>S<sub>&infin;</sub></i> = 18 / (1 - 1/3) = 18 / (2/3) = 18 &times; 1.5 = 27."
+            },
+
+            // CATEGORY 3: DERET TAK HINGGA & APLIKASI (21-25)
+            {
+                id: 21,
+                category: "Deret & Aplikasi",
+                categoryKey: "aplikasi",
+                xp: 20,
+                questionText: "Sebuah bola tenis dijatuhkan dari ketinggian 15 meter. Setiap kali memantul di lantai, bola memantul setinggi 2/3 kali tinggi sebelumnya. Panjang lintasan total hingga bola berhenti adalah...",
+                options: [
+                    { key: "A", text: "75 meter" },
+                    { key: "B", text: "45 meter" },
+                    { key: "C", text: "60 meter" },
+                    { key: "D", text: "90 meter" }
+                ],
+                correct: "A",
+                explanation: "Gunakan rumus cepat panjang lintasan bola jatuh bebas:<br>Pl = <i>h</i> &middot; <sup>(<i>b</i> + <i>a</i>)</sup>/<sub>(<i>b</i> - <i>a</i>)</sub><br>di mana <i>h</i> = 15 meter, rasio = <i>a</i>/<i>b</i> = 2/3.<br>Pl = 15 &middot; (3 + 2) / (3 - 2) = 15 &middot; 5 = 75 meter."
+            },
+            {
+                id: 22,
+                category: "Deret & Aplikasi",
+                categoryKey: "aplikasi",
+                xp: 20,
+                questionText: "Di awal pengamatan, terdapat 100 bakteri pada cawan kultur. Jika bakteri membelah diri menjadi 2 setiap 15 menit, berapakah jumlah total bakteri setelah 2 jam?",
+                options: [
+                    { key: "A", text: "12.800" },
+                    { key: "B", text: "25.600" },
+                    { key: "C", text: "51.200" },
+                    { key: "D", text: "102.400" }
+                ],
+                correct: "B",
+                explanation: "Waktu total = 2 jam = 120 menit.<br>Banyak pembelahan: 120 / 15 = 8 kali pembelahan.<br>Membelah menjadi 2 &rArr; Barisan geometri dengan rasio 2.<br>Suku awal (<i>a</i>) = 100.<br>Jumlah bakteri setelah pembelahan ke-8: <i>u<sub>9</sub></i> = <i>a</i> &middot; 2<sup>8</sup> = 100 &times; 256 = 25.600."
+            },
+            {
+                id: 23,
+                category: "Deret & Aplikasi",
+                categoryKey: "aplikasi",
+                xp: 20,
+                questionText: "Seseorang menabung di bank dengan setoran pertama sebesar Rp50.000. Setiap bulan berikutnya, ia selalu menabung Rp5.000 lebih besar dari bulan sebelumnya. Hitunglah total tabungan selama 1 tahun (12 bulan) tanpa bunga.",
+                options: [
+                    { key: "A", text: "Rp900.000" },
+                    { key: "B", text: "Rp960.000" },
+                    { key: "C", text: "Rp1.000.000" },
+                    { key: "D", text: "Rp930.000" }
+                ],
+                correct: "D",
+                explanation: "Aritmetika dengan <i>a</i> = 50.000, <i>d</i> = 5.000, <i>n</i> = 12.<br><i>S<sub>12</sub></i> = <sup>12</sup>/<sub>2</sub> [2(50.000) + 11(5.000)]<br><i>S<sub>12</sub></i> = 6 &times; [100.000 + 55.000] = 6 &times; 155.000 = Rp930.000."
+            },
+            {
+                id: 24,
+                category: "Deret & Aplikasi",
+                categoryKey: "aplikasi",
+                xp: 20,
+                questionText: "Sebuah gedung pertunjukan memiliki 15 baris kursi. Baris terdepan berisi 20 kursi, baris kedua 24 kursi, baris ketiga 28 kursi, dan seterusnya bertambah secara konstan. Kapasitas total gedung pertunjukan tersebut adalah...",
+                options: [
+                    { key: "A", text: "680 kursi" },
+                    { key: "B", text: "760 kursi" },
+                    { key: "C", text: "720 kursi" },
+                    { key: "D", text: "800 kursi" }
+                ],
+                correct: "C",
+                explanation: "Aritmetika dengan <i>a</i> = 20, <i>d</i> = 4, <i>n</i> = 15.<br><i>S<sub>15</sub></i> = <sup>15</sup>/<sub>2</sub> [2(20) + 14(4)] = 7.5 &times; [40 + 56] = 7.5 &times; 96 = 720 kursi."
+            },
+            {
+                id: 25,
+                category: "Deret & Aplikasi",
+                categoryKey: "aplikasi",
+                xp: 20,
+                questionText: "Pabrik sepatu memproduksi 3.000 unit sepatu pada tahun pertama. Karena perluasan lini produk, kapasitas produksi meningkat secara konstan sebanyak 200 unit per tahun. Total sepatu yang diproduksi selama 10 tahun pertama adalah...",
+                options: [
+                    { key: "A", text: "39.000 unit" },
+                    { key: "B", text: "35.000 unit" },
+                    { key: "C", text: "42.000 unit" },
+                    { key: "D", text: "45.000 unit" }
+                ],
+                correct: "A",
+                explanation: "Aritmetika dengan <i>a</i> = 3.000, <i>d</i> = 200, <i>n</i> = 10.<br><i>S<sub>10</sub></i> = <sup>10</sup>/<sub>2</sub> [2(3.000) + 9(200)] = 5 &times; [6.000 + 1.800] = 5 &times; 7.800 = 39.000 unit."
+            },
+
+            // CATEGORY 4: ADVANCED & HOTS (26-30)
+            {
+                id: 26,
+                category: "Advanced & HOTS",
+                categoryKey: "hots",
+                xp: 30,
+                questionText: "Jika tiga bilangan (<i>k</i> - 1), (<i>k</i> + 3), dan (3<i>k</i> - 1) membentuk barisan geometri bertingkat naik, tentukan jumlah dari semua nilai <i>k</i> yang memenuhi.",
+                options: [
+                    { key: "A", text: "3" },
+                    { key: "B", text: "5" },
+                    { key: "C", text: "8" },
+                    { key: "D", text: "10" }
+                ],
+                correct: "B",
+                explanation: "Syarat barisan geometri: rasio sama.<br>(<i>k</i> + 3) / (<i>k</i> - 1) = (3<i>k</i> - 1) / (<i>k</i> + 3)<br>&rArr; (<i>k</i> + 3)<sup>2</sup> = (<i>k</i> - 1)(3<i>k</i> - 1)<br>&rArr; <i>k</i><sup>2</sup> + 6<i>k</i> + 9 = 3<i>k</i><sup>2</sup> - 4<i>k</i> + 1<br>&rArr; 2<i>k</i><sup>2</sup> - 10<i>k</i> - 8 = 0 &rArr; <i>k</i><sup>2</sup> - 5<i>k</i> - 4 = 0.<br>Gunakan teorema Vieta untuk jumlah akar: <i>k<sub>1</sub></i> + <i>k<sub>2</sub></i> = -<i>b</i>/<i>a</i> = -(-5)/1 = 5."
+            },
+            {
+                id: 27,
+                category: "Advanced & HOTS",
+                categoryKey: "hots",
+                xp: 30,
+                questionText: "Diketahui barisan bilangan <i>u<sub>n</sub></i> memenuhi <i>u<sub>1</sub></i> = 2 dan <i>u<sub>n+1</sub></i> = <i>u<sub>n</sub></i> + 2<i>n</i> + 1 untuk seluruh <i>n</i> &ge; 1. Tentukan suku ke-50 (<i>u<sub>50</sub></i>) dari barisan tersebut.",
+                options: [
+                    { key: "A", text: "2451" },
+                    { key: "B", text: "2551" },
+                    { key: "C", text: "2601" },
+                    { key: "D", text: "2501" }
+                ],
+                correct: "D",
+                explanation: "Mari analisis suku-sukunya:<br><i>u<sub>1</sub></i> = 2<br><i>u<sub>2</sub></i> = <i>u<sub>1</sub></i> + 2(1) + 1 = 2 + 3 = 5<br><i>u<sub>3</sub></i> = <i>u<sub>2</sub></i> + 2(2) + 1 = 5 + 5 = 10<br><i>u<sub>4</sub></i> = 10 + 7 = 17.<br>Perhatikan pola: 2, 5, 10, 17, ...<br>Ini merupakan pola kuadrat bertambah satu: <i>u<sub>n</sub></i> = <i>n</i><sup>2</sup> + 1.<br>Untuk <i>n</i> = 50: <i>u<sub>50</sub></i> = 50<sup>2</sup> + 1 = 2500 + 1 = 2501."
+            },
+            {
+                id: 28,
+                category: "Advanced & HOTS",
+                categoryKey: "hots",
+                xp: 30,
+                questionText: "Ditentukan deret geometri tak hingga konvergen dengan jumlah total = 8. Diketahui juga bahwa jumlah dari seluruh suku bernomor ganjil adalah 6. Tentukan nilai dari suku kedua (<i>u<sub>2</sub></i>) deret tersebut.",
+                options: [
+                    { key: "A", text: "8/9" },
+                    { key: "B", text: "16/9" },
+                    { key: "C", text: "2" },
+                    { key: "D", text: "8/3" }
+                ],
+                correct: "B",
+                explanation: "Deret: <i>a</i>/(1-<i>r</i>) = 8.<br>Suku ganjil (<i>a</i>, <i>ar</i><sup>2</sup>, <i>ar</i><sup>4</sup>, ...): <i>a</i>/(1-<i>r</i><sup>2</sup>) = 6.<br>Ingat bahwa 1-<i>r</i><sup>2</sup> = (1-<i>r</i>)(1+<i>r</i>).<br>Maka: [<i>a</i>/(1-<i>r</i>)] &middot; [1/(1+<i>r</i>)] = 6 &rArr; 8 &middot; [1/(1+<i>r</i>)] = 6 &rArr; 8 = 6 + 6<i>r</i> &rArr; <i>r</i> = 1/3.<br>Substitusikan <i>r</i> ke deret pertama: <i>a</i>/(2/3) = 8 &rArr; <i>a</i> = 16/3.<br>Suku kedua: <i>u<sub>2</sub></i> = <i>ar</i> = (16/3) &times; (1/3) = 16/9."
+            },
+            {
+                id: 29,
+                category: "Advanced & HOTS",
+                categoryKey: "hots",
+                xp: 30,
+                questionText: "Tentukan hasil akhir dari jumlahan deret teleskopik pecahan tingkat tinggi berikut:<br><div class='font-mono my-3 text-center text-xl text-emerald-600 font-extrabold bg-emerald-50/50 py-3 rounded-xl flex justify-center items-center gap-1 flex-wrap text-sm md:text-base'><span>1/(1&times;2)</span> + <span>1/(2&times;3)</span> + <span>1/(3&times;4)</span> + ... + <span>1/(99&times;100)</span></div>",
+                options: [
+                    { key: "A", text: "99/100" },
+                    { key: "B", text: "1/100" },
+                    { key: "C", text: "1" },
+                    { key: "D", text: "49/50" }
+                ],
+                correct: "A",
+                explanation: "Deret teleskopik dapat diubah:<br>1/(<i>n</i>(<i>n</i>+1)) = 1/<i>n</i> - 1/(<i>n</i>+1).<br>Maka deret menjadi:<br>(1 - 1/2) + (1/2 - 1/3) + (1/3 - 1/4) + ... + (1/99 - 1/100).<br>Semua suku saling meniadakan kecuali suku pertama dan terakhir:<br>Hasil = 1 - 1/100 = 99/100."
+            },
+            {
+                id: 30,
+                category: "Advanced & HOTS",
+                categoryKey: "hots",
+                xp: 30,
+                questionText: "Diketahui sebuah barisan berulang didefinisikan dengan <i>u<sub>1</sub></i> = 1 dan <i>u<sub>2</sub></i> = 2, serta aturan rekursif <i>u<sub>n</sub></i> = <sup>(<i>u<sub>n-1</sub></i> + <i>u<sub>n-2</sub></i>)</sup>/<sub>2</sub> untuk <i>n</i> &ge; 3. Jika barisan dilanjutkan hingga tak hingga, tentukan nilai konvergensi limit suku tersebut.",
+                options: [
+                    { key: "A", text: "3/2" },
+                    { key: "B", text: "7/4" },
+                    { key: "C", text: "5/3" },
+                    { key: "D", text: "2" }
+                ],
+                correct: "C",
+                explanation: "Suku ke-<i>n</i> memenuhi hubungan <i>u<sub>n</sub></i> - <i>u<sub>n-1</sub></i> = -1/2(<i>u<sub>n-1</sub></i> - <i>u<sub>n-2</sub></i>).<br>Ini deret geometri menyusut bertingkat dengan rasio -1/2.<br>Nilai limit konvergensi barisan rekursif linier tingkat dua ini dapat diselesaikan dengan rumus cepat:<br>Limit = (<i>u<sub>1</sub></i> + 2<i>u<sub>2</sub></i>) / 3 = (1 + 2(2)) / 3 = 5/3."
+            }
+        ];
+
+        // STATE VARIABLES
+        let currentIdx = 0; // 0 to 29
+        let currentFilter = "all"; // 'all', 'fondasi', 'menengah', 'aplikasi', 'hots'
+        let filteredQuestions = [...questions];
+        
+        // Track user performance
+        let userAnswers = Array(questions.length).fill(null); // stores { selectedKey: 'A', isCorrect: true/false }
+        let totalXp = 0;
+
+        // Render Map Navigation and Category Counters
+        function initDashboard() {
+            // Calculate category counts
+            document.getElementById('count-all').innerText = questions.length;
+            document.getElementById('count-fondasi').innerText = questions.filter(q => q.categoryKey === 'fondasi').length;
+            document.getElementById('count-menengah').innerText = questions.filter(q => q.categoryKey === 'menengah').length;
+            document.getElementById('count-aplikasi').innerText = questions.filter(q => q.categoryKey === 'aplikasi').length;
+            document.getElementById('count-hots').innerText = questions.filter(q => q.categoryKey === 'hots').length;
+
+            renderQuestionGrid();
+            loadQuestion();
+        }
+
+        // Render dynamic colored grid map based on states
+        function renderQuestionGrid() {
+            const grid = document.getElementById('questionGrid');
+            grid.innerHTML = "";
+
+            filteredQuestions.forEach((q) => {
+                const btn = document.createElement('button');
+                btn.id = `gridBtn-${q.id}`;
+                btn.innerText = q.id;
+                
+                // Base classes
+                let classes = "w-full h-10 rounded-xl font-bold text-xs flex items-center justify-center border-2 transition-all active:scale-95 ";
+                
+                const ans = userAnswers[q.id - 1];
+                const isCurrent = (questions[currentIdx].id === q.id);
+
+                if (isCurrent) {
+                    classes += "border-slate-800 bg-slate-100 text-slate-800 ring-4 ring-emerald-100 ";
+                } else if (ans) {
+                    if (ans.isCorrect) {
+                        classes += "bg-emerald-500 border-emerald-600 text-white ";
+                    } else {
+                        classes += "bg-rose-500 border-rose-600 text-white ";
+                    }
+                } else {
+                    classes += "bg-slate-50 border-slate-200 text-slate-500 hover:bg-slate-100 ";
+                }
+
+                btn.className = classes;
+                btn.onclick = () => {
+                    // Find actual index of this question inside global questions
+                    const actualIdx = questions.findIndex(item => item.id === q.id);
+                    if (actualIdx !== -1) {
+                        currentIdx = actualIdx;
+                        renderQuestionGrid();
+                        loadQuestion();
+                    }
+                };
+
+                grid.appendChild(btn);
+            });
+        }
+
+        // Filter question list on navigation sidebar
+        function filterCategory(cat) {
+            currentFilter = cat;
+            
+            // Toggle active style on sidebar buttons
+            const categories = ['all', 'fondasi', 'menengah', 'aplikasi', 'hots'];
+            categories.forEach(c => {
+                const btn = document.getElementById(`catBtn-${c}`);
+                if (c === cat) {
+                    btn.className = btn.className.replace(/bg-slate-50|text-slate-600|hover:bg-slate-100/g, '').trim();
+                    if (!btn.className.includes('bg-emerald-600')) {
+                        btn.className += " bg-emerald-600 text-white";
+                    }
+                } else {
+                    btn.className = btn.className.replace(/bg-emerald-600|text-white/g, '').trim();
+                    if (!btn.className.includes('bg-slate-50')) {
+                        btn.className += " bg-slate-50 text-slate-600 hover:bg-slate-100";
+                    }
+                }
+            });
+
+            if (cat === "all") {
+                filteredQuestions = [...questions];
+            } else {
+                filteredQuestions = questions.filter(q => q.categoryKey === cat);
+            }
+
+            // Jump to first question of filtered list
+            if (filteredQuestions.length > 0) {
+                const firstId = filteredQuestions[0].id;
+                currentIdx = questions.findIndex(q => q.id === firstId);
+            }
+
+            renderQuestionGrid();
+            loadQuestion();
+        }
+
+        // Load Selected Question into Card View
+        function loadQuestion() {
+            const q = questions[currentIdx];
+            
+            // Set basic info labels
+            document.getElementById('currentCategoryLabel').innerText = `KATEGORI: ${q.category}`;
+            document.getElementById('currentXpLabel').innerText = q.xp;
+            document.getElementById('currentQuestionId').innerText = q.id;
+            document.getElementById('questionText').innerHTML = q.questionText;
+            document.getElementById('currentProgressFraction').innerText = `${q.id} / ${questions.length} Soal`;
+
+            // Render Options
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = "";
+
+            const previousAnswer = userAnswers[q.id - 1];
+
+            q.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.id = `opt-${opt.key}`;
+                btn.className = getOptionStyle(opt.key, previousAnswer, q.correct);
+                btn.disabled = (previousAnswer !== null); // Lock answers once submitted
+                btn.onclick = () => submitAnswer(opt.key);
+
+                btn.innerHTML = `
+                    <div class="flex items-center gap-3 w-full">
+                        <span class="w-8 h-8 rounded-full border border-slate-200 bg-slate-50 font-black text-xs md:text-sm flex items-center justify-center text-slate-500 shrink-0 select-indicator">${opt.key}</span>
+                        <span class="text-left font-bold text-xs md:text-sm tracking-wide text-slate-700">${opt.text}</span>
+                    </div>
+                `;
+                optionsContainer.appendChild(btn);
+            });
+
+            // Handle bottom Navigation buttons state
+            document.getElementById('prevBtn').disabled = (q.id === 1);
+            if (q.id === questions.length) {
+                document.getElementById('nextBtn').innerText = "SELESAI 🎉";
+                document.getElementById('nextBtn').onclick = finishQuiz;
+            } else {
+                document.getElementById('nextBtn').innerText = "Selanjutnya ▶";
+                document.getElementById('nextBtn').onclick = navigateNext;
+            }
+
+            // Handle Explanation panel visibility
+            const expPanel = document.getElementById('explanationPanel');
+            if (previousAnswer) {
+                document.getElementById('explanationText').innerHTML = q.explanation;
+                expPanel.classList.remove('hidden');
+            } else {
+                expPanel.classList.add('hidden');
+            }
+        }
+
+        // Get option button design state styles
+        function getOptionStyle(key, prevAns, correctKey) {
+            let base = "w-full p-4 rounded-2xl border-2 transition-all duration-200 flex items-center justify-between shadow-sm active:scale-[0.99] ";
+            
+            if (prevAns) {
+                // If this is correct option
+                if (key === correctKey) {
+                    return base + "bg-emerald-50 border-emerald-500 text-emerald-800 ring-2 ring-emerald-100";
+                }
+                // If user selected this wrong option
+                if (key === prevAns.selectedKey && key !== correctKey) {
+                    return base + "bg-rose-50 border-rose-500 text-rose-800 ring-2 ring-rose-100";
+                }
+                // Other non-selected options when answered
+                return base + "bg-slate-50 border-slate-200 text-slate-400 opacity-60 cursor-not-allowed";
+            }
+            
+            // Standard interactive state
+            return base + "bg-white border-slate-100 hover:border-emerald-400 hover:bg-emerald-50/20 text-slate-700 cursor-pointer";
+        }
+
+        // Submit Selected Option answer
+        function submitAnswer(key) {
+            const q = questions[currentIdx];
+            const isCorrect = (key === q.correct);
+            
+            userAnswers[q.id - 1] = {
+                selectedKey: key,
+                isCorrect: isCorrect
+            };
+
+            // Audio effects
+            if (isCorrect) {
+                soundSuccess();
+                totalXp += q.xp;
+            } else {
+                soundFail();
+            }
+
+            // Update stats, score displays, and save to grid
+            updateStatistics();
+            renderQuestionGrid();
+            loadQuestion();
+        }
+
+        // Update overall mission statistics
+        function updateStatistics() {
+            let correct = 0;
+            let wrong = 0;
+            let answered = 0;
+
+            userAnswers.forEach(ans => {
+                if (ans !== null) {
+                    answered++;
+                    if (ans.isCorrect) correct++;
+                    else wrong++;
+                }
+            });
+
+            document.getElementById('answeredRatio').innerText = `${answered}/${questions.length} Terjawab`;
+            document.getElementById('correctCount').innerText = correct;
+            document.getElementById('wrongCount').innerText = wrong;
+            document.getElementById('xpDisplay').innerText = totalXp;
+
+            const accuracy = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+            document.getElementById('accuracyPct').innerText = `${accuracy}%`;
+        }
+
+        // Simple Next/Prev navigation controls
+        function navigatePrev() {
+            // Find index of current question in filtered list to maintain navigation logic
+            const currentFilteredIdx = filteredQuestions.findIndex(q => q.id === questions[currentIdx].id);
+            if (currentFilteredIdx > 0) {
+                const prevQuestion = filteredQuestions[currentFilteredIdx - 1];
+                currentIdx = questions.findIndex(q => q.id === prevQuestion.id);
+                renderQuestionGrid();
+                loadQuestion();
+            } else if (currentIdx > 0) {
+                // fallback to general index
+                currentIdx--;
+                renderQuestionGrid();
+                loadQuestion();
+            }
+        }
+
+        function navigateNext() {
+            const currentFilteredIdx = filteredQuestions.findIndex(q => q.id === questions[currentIdx].id);
+            if (currentFilteredIdx < filteredQuestions.length - 1) {
+                const nextQuestion = filteredQuestions[currentFilteredIdx + 1];
+                currentIdx = questions.findIndex(q => q.id === nextQuestion.id);
+                renderQuestionGrid();
+                loadQuestion();
+            } else if (currentIdx < questions.length - 1) {
+                // fallback to general index
+                currentIdx++;
+                renderQuestionGrid();
+                loadQuestion();
+            }
+        }
+
+        // Final score summary
+        function finishQuiz() {
+            let answered = userAnswers.filter(ans => ans !== null).length;
+            let correct = userAnswers.filter(ans => ans !== null && ans.isCorrect).length;
+            
+            soundLevelUp();
+
+            const card = document.getElementById('questionCard');
+            card.innerHTML = `
+                <div class="flex flex-col items-center justify-center text-center p-6 md:p-12 gap-6 animate-scaleUp">
+                    <span class="text-6xl md:text-7xl">🏆</span>
+                    <h2 class="heading-font text-3xl md:text-4xl text-emerald-700 font-black">Latihan Selesai!</h2>
+                    <p class="text-slate-500 text-sm md:text-base max-w-lg leading-relaxed">
+                        Luar biasa! Kamu telah menyelesaikan seluruh rangkaian tantangan <strong>Sequence Drill Master</strong> dengan dedikasi tinggi.
+                    </p>
+                    
+                    <div class="bg-teal-50 border-2 border-teal-100 rounded-3xl p-6 w-full max-w-md grid grid-cols-2 gap-4 my-4">
+                        <div class="text-center">
+                            <span class="text-xs text-slate-400 font-bold uppercase block">Total XP</span>
+                            <span class="text-3xl font-extrabold text-teal-800">${totalXp} XP</span>
+                        </div>
+                        <div class="text-center">
+                            <span class="text-xs text-slate-400 font-bold uppercase block">Akurasi</span>
+                            <span class="text-3xl font-extrabold text-teal-800">${answered > 0 ? Math.round((correct / answered) * 100) : 0}%</span>
+                        </div>
+                        <div class="text-center col-span-2 pt-2 border-t border-teal-100/60">
+                            <span class="text-xs text-slate-500">Soal Terjawab: <strong>${answered} / 30</strong></span>
+                        </div>
+                    </div>
+
+                    <button onclick="window.location.reload()" class="bg-emerald-600 text-white font-black py-3 px-8 rounded-2xl border-b-4 border-emerald-800 hover:bg-emerald-700 active:scale-95 transition-all text-sm">
+                        Ulangi Drill Latihan
+                    </button>
+                </div>
+            `;
+        }
+
+        // SCRATCHPAD WHITEBOARD CODE
+        const canvas = document.getElementById('scratchCanvas');
+        const ctx = canvas.getContext('2d');
+        let isDrawing = false;
+        let lastX = 0;
+        let lastY = 0;
+        let strokeColor = '#1e293b';
+
+        // Fit canvas to layout container size dynamically
+        function resizeCanvas() {
+            const rect = canvas.parentNode.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+            // Redraw configuration
+            ctx.lineJoin = 'round';
+            ctx.lineCap = 'round';
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = strokeColor;
+        }
+
+        function toggleScratchpad() {
+            const modal = document.getElementById('scratchpadModal');
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                setTimeout(() => {
+                    resizeCanvas();
+                    setScratchColor(strokeColor);
+                }, 100);
+            } else {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        // Palette selector color handler
+        function setScratchColor(hex) {
+            strokeColor = hex;
+            ctx.strokeStyle = hex;
+            
+            // UI state handler for colors
+            const colors = ['slate', 'red', 'blue', 'green'];
+            colors.forEach(c => {
+                const btn = document.getElementById(`color-${c}`);
+                if (btn) btn.style.transform = "scale(1)";
+            });
+
+            if (hex === '#1e293b') document.getElementById('color-slate').style.transform = "scale(1.25)";
+            if (hex === '#dc2626') document.getElementById('color-red').style.transform = "scale(1.25)";
+            if (hex === '#2563eb') document.getElementById('color-blue').style.transform = "scale(1.25)";
+            if (hex === '#16a34a') document.getElementById('color-green').style.transform = "scale(1.25)";
+        }
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        // Drawing Event Listeners
+        function startDrawing(e) {
+            isDrawing = true;
+            getCoords(e);
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            e.preventDefault();
+            
+            const currentCoords = getCoords(e);
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+            ctx.lineTo(currentCoords.x, currentCoords.y);
+            ctx.stroke();
+
+            lastX = currentCoords.x;
+            lastY = currentCoords.y;
+        }
+
+        function stopDrawing() {
+            isDrawing = false;
+        }
+
+        function getCoords(e) {
+            const rect = canvas.getBoundingClientRect();
+            let clientX, clientY;
+
+            if (e.touches && e.touches.length > 0) {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
+
+            const x = clientX - rect.left;
+            const y = clientY - rect.top;
+
+            if (!isDrawing) {
+                lastX = x;
+                lastY = y;
+            }
+
+            return { x, y };
+        }
+
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+
+        canvas.addEventListener('touchstart', startDrawing);
+        canvas.addEventListener('touchmove', draw);
+        canvas.addEventListener('touchend', stopDrawing);
+
+        // Resize handler
+        window.addEventListener('resize', () => {
+            if (!document.getElementById('scratchpadModal').classList.contains('hidden')) {
+                resizeCanvas();
+            }
+        });
+
+        // SOUND EFFECTS SYNTHESIZER
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playTone(freq, type, duration) {
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {
+                console.log("Audio not supported or pending user event.");
+            }
+        }
+        
+        function soundSuccess() {
+            playTone(523.25, 'sine', 0.15); // C5
+            setTimeout(() => playTone(659.25, 'sine', 0.25), 100); // E5
+        }
+
+        function soundFail() {
+            playTone(220, 'triangle', 0.35); // A3
+        }
+
+        function soundLevelUp() {
+            playTone(523.25, 'sine', 0.1);
+            setTimeout(() => playTone(659.25, 'sine', 0.1), 80);
+            setTimeout(() => playTone(783.99, 'sine', 0.1), 160);
+            setTimeout(() => playTone(1046.50, 'sine', 0.55), 240); // Celebration chord
+        }
+
+        // Initialize App on Window Load
+        window.onload = function() {
+            initDashboard();
+        }
+    </script>
+</body>
+</html>
